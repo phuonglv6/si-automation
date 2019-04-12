@@ -1,0 +1,63 @@
+.canvasWrapper {
+  background-color: white;
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid #dddddd;
+}
+
+#rightBar{
+  background-color: white;
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	border: 1px solid #dddddd;
+	float: right;
+}
+
+#fieldList{
+  background-color: white;
+	position: absolute;
+	top: 0px;
+	bottom: 40px;
+	left: 0px;
+	right: 0px;
+	overflow-x: auto;
+	overflow-y: auto;
+	border-bottom: 1px solid #dddddd;
+}
+
+.selected_range {
+	margin: 10px 5px 0px 10px
+}
+
+#submit-button {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	text-align: center;
+	padding: 9px 0px 9px 0px;
+	font-size: 25px;
+	cursor: pointer;
+}
+
+#detailTable {
+	margin-bottom: 0
+}
+
+#detailTable tbody tr:hover {
+	cursor: pointer;
+}
+
+#detailTable tbody tr:hover td {
+	background-color: yellowgreen;
+}
+
+.highlight {
+	background-color: lavender !important;
+}

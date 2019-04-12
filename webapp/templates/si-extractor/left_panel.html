@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% load static %}
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=no">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<script src="{% static 'js/pdf.js' %}"></script>
+		<script src="{% static 'js/pdf.worker.js' %}"></script>
+		<script type="text/javascript"></script>
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<div  id="holder"></div>
+		<div id="doc_path" hidden>{{name}}</div>
+		<script src="{% static 'js/pdf.loader.js' %}"></script>
+	</body>
+
+</html>

@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load extraTags %}
+
+{% block title %}<title> Annotation {{ pk }} </title>{% endblock %}
+{% block css %}
+  <meta name="viewport" content="user-scalable=no, width=device-width"/>
+  <link rel="stylesheet" href="{% static 'css/annotate.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/loader.css' %}"/>
+{% endblock css %}
+
+{% block content %}
+
+  <div id="main-content" style="display: inline-block; width: 100%;">
+    <div id="canWrap" class="canvasWrapper">
+      <canvas id="imgCanvas" style="position: relative"></canvas>
+    </div>
+    <div id="rightBar">
+      <div id="fieldList">
+        <table id="detailTable" class="table table-bordered table-striped">
+          <tbody>
+            <tr><td width="70%"><b> Template No. </b></td><td id="pk"><b>{{ pk }}</b></td></tr>
+            {% for key in classes.values %}
+              <tr class='field'>
+                <td><b> {{ key|upper|replaceUnderScore }} </b></td>
+                <td class="cor" id="{{ key }}"></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div id="submit-button"><b> SUBMIT </b></div>
+    </div>
+  </div>
+    <table id="existCor" class='exist' hidden>
+      <tbody>
+        {% for field in fields %}
+          <tr>
+            <td class='exist fName'>{{field.name}}</td>
+            <td class='exist fX1'>{{field.x1}}</td>
+            <td class='exist fY1'>{{field.y1}}</td>
+            <td class='exist fX2'>{{field.x2}}</td>
+            <td class='exist fY2'>{{field.y2}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    
+{% endblock content %}
+{% block js %}
+  <script type="text/javascript" src="{% static 'js/annotate_setup.js'%}"></script>
+  <script type="text/javascript" src="{% static 'js/annotate.js'%}"></script>
+  {% comment %} <script type="text/javascript" src="{% static 'js/upload_crop.js'%}"></script> {% endcomment %}
+{% endblock js %}

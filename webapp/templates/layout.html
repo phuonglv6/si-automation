@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block title %}<title> BL Drafting </title>{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    {% load static %}
+    <!-- bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    
+    <!-- x-editable (bootstrap version) -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    
+    <!-- toastr notification -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" integrity="sha256-ENFZrbVzylNbgnXx0n3I1g//2WeO47XxoPe0vkp3NC8=" crossorigin="anonymous" />
+
+    {% block css %}{% endblock css %}
+  </head>
+
+  <body>
+    {% block navigation %}
+    {% endblock %}
+
+    <div class="container-fluid">
+      {% block content %}{% endblock %}
+    </div>
+		
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <!-- x-editable (bootstrap version) -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+    <!-- toastr notification -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" integrity="sha256-3blsJd4Hli/7wCQ+bmgXfOdK7p/ZUMtPXY08jmxSSgk=" crossorigin="anonymous">
+    </script>
+
+    <script>
+      toastr.options = {  
+          "closeButton": true,
+          "debug": false,
+          "newestOnTop": true,
+          "progressBar": false,
+          "positionClass": "toast-top-center",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": "700",
+          "hideDuration": "1000",
+          "timeOut": "8000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut",
+        }
+    </script>
+
+    <!-- CSRF -->
+    {% csrf_token %}
+    <script src="{% static 'js/ajax_csrf.js' %}"></script>
+    <script type="text/javascript"> var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val(); </script>
+
+    {% block js %}
+    {% endblock js %}
+  </body>
+</html>

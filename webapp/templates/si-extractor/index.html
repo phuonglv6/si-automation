@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+	<link href="{% static 'css/loader.css' %}" rel=stylesheet>
+  	<link href="{% static 'css/up-styles.css' %}" rel=stylesheet>
+{% endblock css %}
+
+{% block js %}
+	<script src="{% static 'js/filedrop.js' %}" type="text/javascript" ></script>
+{% endblock js %}
+
+{% block content %}
+	<div id="navbar_background">
+		<div class="navbar-header">               
+			<a class="navbar-brand" href="/">
+				<img src="http://dounets.com/themes/default/images/dou_logo_long_trans.gif" alt="DOU Networks" style="width:200px;">
+			</a>
+		</div>
+	</div>
+
+	<div class="container" >
+		<input type="file" name="file" id="file">
+		<!-- Drag and Drop container-->
+		<div class="upload-area"  id="uploadfile">
+			<h1 class='DragDrop'>Drag and Drop file here<br/>Or<br/>Click to select file</h1>
+		</div>
+	</div>
+
+{% endblock content %}
+

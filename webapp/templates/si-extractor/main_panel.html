@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+  <link href="{% static 'css/styles.css' %}" rel=stylesheet>
+  <link href="{% static 'css/doc_template.css' %}" rel=stylesheet>
+  <link href="{% static 'css/loader.css' %}" rel=stylesheet>
+  <style>
+    div.container-fluid{
+      height: 100%;
+    }
+    
+    html, body, form, main {
+        height: 100%;
+    }
+
+    div.header{
+      padding: 10px;  
+      height: 30px;
+      background: #fafafa
+    }
+    
+    div.contain{
+      position: absolute;
+      top: 50px;
+      bottom: 0; 
+      left: 0;
+      right: 0;
+    }
+  </style>
+{% endblock css %}
+
+{% block content %}
+  <div class="header">
+      <form id="upload_form" method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="file-upload" class="custom-button">
+          <i class="fa fa-cloud-upload"></i> Other upload
+        </label>
+        <input id="file-upload" type="file"/>
+      </form>
+      <button  id="bl_submit" class="custom-button"> SUBMIT </button>
+  </div>
+  <div class="contain">
+      <iframe id="left_frame" style=" float: left; height: 100%; width: 48%; clear: left;" src="">
+      </iframe >
+      <iframe id="right_frame" style="float: left;  height: 100%; width: 51%; border-color: transparent" src="">
+      </iframe>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script src="{% static 'js/list.js' %}"></script>
+  <script src="{% static 'js/index.js' %}"></script>
+{% endblock js %}

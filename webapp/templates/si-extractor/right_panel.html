@@ -1,0 +1,919 @@
+<html>
+	<head>
+
+		<meta http-equiv=Content-Type content="text/html; charset=UTF-8">
+		{% load static %}
+		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    
+		<!-- x-editable (bootstrap version) -->
+		<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+		
+		<!-- toastr notification -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" integrity="sha256-ENFZrbVzylNbgnXx0n3I1g//2WeO47XxoPe0vkp3NC8=" crossorigin="anonymous" />
+		<style type="text/css">
+			h1 {
+				z-index: 10;
+				position: fixed;
+				color: rgba(0, 0, 0, 0.5);
+				top: -18px;
+			}
+			#submit-btn {
+				border: 1px solid #ccc;
+				padding: 6px 8px;
+				cursor: pointer;
+				border-radius: 10px;
+				margin: 30px 0px 0px 0px;
+				z-index: 10;
+				position: fixed;
+				color: rgba(0, 0, 0, 0.5);
+				background: rgba(0, 0, 0, 0.15);
+			}
+
+			#submit-btn:hover {
+				border: 1px solid #ccc;
+				padding: 6px 8px;
+				cursor: pointer;
+				border-radius: 10px;
+				margin: 30px 0px 0px 0px;
+				z-index: 10;
+				position: fixed;
+				color: rgba(0, 0, 0, 1);
+				background: rgba(255, 255, 255, 1);
+			}
+		</style>
+		<!-- Dong Phan -->
+		<style type="text/css">
+			span.cls_005 {
+				font-family: Courier New, serif;
+				font-size: 14.0px;
+				color: rgb(0, 0, 255);
+				font-weight: bold;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_005 {
+				font-family: Courier New, serif;
+				font-size: 14.0px;
+				color: rgb(0, 0, 255);
+				font-weight: bold;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_003 {
+				font-family: Courier New, serif;
+				font-size: 6.0px;
+				color: rgb(0, 0, 0);
+				font-weight: bold;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_003 {
+				font-family: Courier New, serif;
+				font-size: 6.0px;
+				color: rgb(0, 0, 0);
+				font-weight: bold;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_004 {
+				font-family: Courier New, serif;
+				font-size: 11.0px;
+				color: rgb(0, 0, 0);
+				font-weight: bold;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_004 {
+				font-family: Courier New, serif;
+				font-size: 11.0px;
+				color: rgb(0, 0, 0);
+				font-weight: bold;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_006 {
+				font-family: Arial, serif;
+				font-size: 5.0px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_006 {
+				font-family: Arial, serif;
+				font-size: 5.0px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_002 {
+				font-family: Courier New, serif;
+				font-size: 10.0px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_002 {
+				font-family: Courier New, serif;
+				font-size: 10.0px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_017 {
+				font-family: Arial, serif;
+				font-size: 4.3px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_017 {
+				font-family: Arial, serif;
+				font-size: 4.3px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_007 {
+				font-family: Arial, serif;
+				font-size: 5.1px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_007 {
+				font-family: Arial, serif;
+				font-size: 5.1px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_008 {
+				font-family: Courier New, serif;
+				font-size: 7.0px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_008 {
+				font-family: Courier New, serif;
+				font-size: 7.0px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_009 {
+				font-family: Courier New, serif;
+				font-size: 9.1px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_009 {
+				font-family: Courier New, serif;
+				font-size: 9.1px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_010 {
+				font-family: Arial, serif;
+				font-size: 7.0px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_010 {
+				font-family: Arial, serif;
+				font-size: 7.0px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_011 {
+				font-family: Arial, serif;
+				font-size: 4.0px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_011 {
+				font-family: Arial, serif;
+				font-size: 4.0px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_018 {
+				font-family: Courier New, serif;
+				font-size: 8.0px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_018 {
+				font-family: Courier New, serif;
+				font-size: 8.0px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_012 {
+				font-family: Arial, serif;
+				font-size: 6.0px;
+				color: rgb(255, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_012 {
+				font-family: Arial, serif;
+				font-size: 6.0px;
+				color: rgb(255, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_013 {
+				font-family: Arial, serif;
+				font-size: 5.5px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_013 {
+				font-family: Arial, serif;
+				font-size: 5.5px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_014 {
+				font-family: Arial, serif;
+				font-size: 6.0px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_014 {
+				font-family: Arial, serif;
+				font-size: 6.0px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_016 {
+				font-family: Courier New, serif;
+				font-size: 7.5px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_016 {
+				font-family: Courier New, serif;
+				font-size: 7.5px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_015 {
+				font-family: Arial, serif;
+				font-size: 5.5px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_015 {
+				font-family: Arial, serif;
+				font-size: 5.5px;
+				color: rgb(0, 0, 255);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_019 {
+				font-family: Courier New, serif;
+				font-size: 8.5px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_019 {
+				font-family: Courier New, serif;
+				font-size: 8.5px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			span.cls_020 {
+				font-family: Courier New, serif;
+				font-size: 9.5px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+
+			div.cls_020 {
+				font-family: Courier New, serif;
+				font-size: 9.5px;
+				color: rgb(0, 0, 0);
+				font-weight: normal;
+				font-style: normal;
+				text-decoration: none
+			}
+		
+
+			#shipper {
+				/* border: 1px solid black; */
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 60px;
+				width: 300px;
+				display: table-cell;
+				line-height: initial;
+				/* text-align: center; */
+				/* display: table-cell; */
+				/* display: table-cell; */
+				/* vertical-align: middle; */
+				/* word-break: break-all; */
+			}
+
+			#consignee {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 50px;
+				width: 300px;
+				/* text-align: center; */
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#notify {
+				/* border: 1px solid black; */
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 57px;
+				width: 300px;
+				/* text-align: center; */
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#forwarding {
+				/* border: 1px solid black; */
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 33px;
+				width: 300px;
+				/* text-align: center; */
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#place_of_receipt {
+				/* border: 1px solid black; */
+				border: 1px solid transparent;
+				font-size: 1px;
+				height: 12px;
+				width: 150px;
+				display: table-cell;
+				line-height: initial;
+
+			}
+
+			#vessel {
+				/* border: 1px solid black; */
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 15px;
+				width: 150px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#port_of_loading {
+				/* border: 1px solid black; */
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 15px;
+				width: 150px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#port_of_discharge {
+				/* border: 1px solid black; */
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 12px;
+				width: 150px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#place_of_delivery {
+				/* border: 1px solid black; */
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 12px;
+				width: 150px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#description {
+				/* border: 1px solid black; */
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 150px;
+				width: 200px;
+				/* text-align: center; */
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#marks {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 150px;
+				width: 110px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#total_gross_weight{
+				border: 1px solid transparent;
+				height: 120px;
+				width: 80px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#total_measurement{
+				border: 1px solid transparent;
+				height: 120px;
+				width: 80px;
+				display: table-cell;
+				line-height: initial;
+			} 
+
+			#booking_no {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 15px;
+				width: 120px;
+				/* text-align: center; */
+				display: table-cell;
+				line-height: initial;
+			}
+			
+			#release_seaway_bill {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 15px;
+				width: 120px;
+				/* text-align: center; */
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#release_seaway_bill {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 15px;
+				width: 120px;
+				/* text-align: center; */
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#freight_term {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 12px;
+				width: 90px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#place_of_issue {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 13px;
+				width: 110px;
+				display: table-cell;
+				line-height: initial;
+			}
+			
+			#etd_date_laden_onboard {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 13px;
+				width: 110px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#freight_payable_at {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 13px;
+				width: 80px;
+				display: table-cell;
+				line-height: initial;
+			}
+
+			#original_requirements {
+				font-size: 1px;
+				border: 1px solid transparent;
+				height: 20px;
+				width: 100px;
+				display: table-cell;
+				line-height: initial;
+			}
+			span.emptyclass{
+				height: 10px !important;
+				width: 70px !important;
+				border-bottom: 1px dashed #428bca !important;
+			}
+		</style>
+
+		<!-- jQuery -->
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="crossorigin="anonymous"></script>
+
+		<script type="text/javascript">var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();</script>
+			
+		<!-- Bootstrap -->
+		<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+
+		<!-- toastr notification -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" integrity="sha256-ENFZrbVzylNbgnXx0n3I1g//2WeO47XxoPe0vkp3NC8="crossorigin="anonymous" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" integrity="sha256-3blsJd4Hli/7wCQ+bmgXfOdK7p/ZUMtPXY08jmxSSgk="crossorigin="anonymous">
+		</script>
+		<script>
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": false,
+				"positionClass": "toast-top-center",
+				"preventDuplicates": true,
+				"onclick": null,
+				"showDuration": "700",
+				"hideDuration": "1000",
+				"timeOut": "5000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut",
+			};
+				
+			$(document).ready(function () {
+				$("#submit-btn").click(function () {
+					toastr.success('BL Draft Submited', 'SUCCESS');
+				});
+			});
+		</script>
+		<!-- CSRF -->
+		{% csrf_token %}
+		<script src="{% static 'js/ajax_csrf.js' %}"></script>
+	</head>
+
+    <body  class="c20">
+		<div style="position:absolute;zoom: 165%;left: 35px; top:0px;width:596px;height:843px;border-style:outset;">
+			<div style="position:absolute;left:0px;top:0px">
+				<img src="{% static 'img/background1.jpg' %}" width=596 height=843></div>
+			<div style="position:absolute;left:199.51px;top:21.71px" class="cls_005"><span class="cls_005">COPY NON
+					NEGOTIABLE</span></div>
+			<div style="position:absolute;left:516.46px;top:27.69px" class="cls_003"><span class="cls_003">PAGE:</span></div>
+			<div style="position:absolute;left:546.26px;top:27.69px" class="cls_003"><span class="cls_003">1 OF</span></div>
+			<div style="position:absolute;left:572.11px;top:27.69px" class="cls_003"><span class="cls_003">2</span></div>
+			<div style="position:absolute;left:480.02px;top:33.38px" class="cls_004"><span class="cls_004">SEA
+					WAYBILL</span></div>
+			<div style="position:absolute;left:32.04px;top:59.87px" class="cls_006"><span class="cls_006">SHIPPER/EXPORTER</span></div>
+			<div style="position:absolute;left:343.94px;top:60.23px" class="cls_006"><span class="cls_006">BOOKING
+					NO.</span></div>
+			<div style="position:absolute;left:469.15px;top:60.23px" class="cls_006"><span class="cls_006">SEA
+					WAYBILL NO.</span></div>
+			<div style="position:absolute;left:341.93px;top:64.98px" class="cls_002"><span id="booking_no" class="cls_002" data-type="textarea"  style="white-space: pre-line">{{booking_no}}</span></div>
+			<div style="position:absolute;left:469.02px;top:64.98px" class="cls_002"><span id="release_seaway_bill" class="cls_002" data-type="textarea"  style="white-space: pre-line">{{release_seaway_bill}}</span></div>
+			<div style="position:absolute;left:30.02px;top:68.08px" class="cls_002"><span class="emptyclass" data-type="textarea"  style="white-space: pre-line"
+				id="shipper"
+				>{{shipper}}</span></div>
+				
+			<div style="position:absolute;left:343.94px;top:130.94px" class="cls_006"><span class="cls_006">FORWARDING
+			AGENT-REFERENCES</span></div>
+			
+			<div style="position:absolute;left:32.04px;top:132.69px" class="cls_017"><span class="cls_017">CONSIGNEE</span></div>
+			<div style="position:absolute;left:343.94px;top:140.48px"  class="cls_002"><span id="forwarding"
+				class="cls_002" style="white-space: pre-line">{{forwarding}}</span></div>
+			<div style="position:absolute;left:30.02px;top:141.85px" class="cls_002"><span id="consignee" class="cls_002"
+				 style="white-space: pre-line">{{ consignee}}</span></div>
+
+			<div style="position:absolute;left:342.72px;top:173.94px" class="cls_007"><span class="cls_007">RECEIVED by the
+					Carrier in apparent good order and condition (unless otherwise stated herein) the total</span></div>
+			<div style="position:absolute;left:342.72px;top:179.62px" class="cls_007"><span class="cls_007">number or
+					quantity of Containers or other packages or units indicated in the box entitled "Carrier's
+					Receipt",</span></div>
+			<!-- <div style="position:absolute;left:227.22px;top:178.47px" class="cls_002"><span class="cls_002">>></span></div> -->
+			<div style="position:absolute;left:342.72px;top:185.31px" class="cls_007"><span class="cls_007">to be carried
+					subject to all the terms and conditions hereof from the Place of Receipt or Port of Loading to
+					the</span></div>
+			<div style="position:absolute;left:342.72px;top:191.00px" class="cls_007"><span class="cls_007">Port of
+					Discharge or Place of Delivery, as applicable. Delivery of the Goods to the Carrier for Carriage</span>
+			</div>
+			<div style="position:absolute;left:31.75px;top:197.12px" class="cls_006"><span class="cls_006">NOTIFY PARTY (It
+					is agreed that no responsibility shall be attached to the Carrier or its Agents for failure to
+					notify)</span></div>
+			<div style="position:absolute;left:342.72px;top:196.69px" class="cls_007"><span class="cls_007">hereunder
+					constitutes acceptance by the Merchant (as defined hereinafter) (i) of all the terms and
+					conditions,</span></div>
+			<div style="position:absolute;left:342.72px;top:202.38px" class="cls_007"><span class="cls_007">whether printed,
+					stamped or otherwise incorporated on this side and on the reverse side of this Bill of lading</span>
+			</div>
+			<div style="position:absolute;left:342.72px;top:208.06px" class="cls_007"><span class="cls_007">and the terms
+					and conditions of the Carrier's applicable tariff(s) as if they were all signed by the Merchant,</span>
+			</div>
+			<div style="position:absolute;left:342.72px;top:213.75px" class="cls_007"><span class="cls_007">and (ii) that
+					any prior representations and/or agreements for or in connection with Carriage of the Goods are</span>
+			</div>
+			<div style="position:absolute;left:342.72px;top:219.44px" class="cls_007"><span class="cls_007">superseded by
+					this Bill of Lading. If this is a negotiable (To Order/of) Bill of Lading, one original Bill of
+					Lading,</span></div>
+			<div style="position:absolute;left:342.72px;top:225.13px" class="cls_007"><span class="cls_007">duly endorsed
+					must be surrendered by the Merchant to the Carrier (together with any outstanding Freight) in</span>
+			</div>
+			<div style="position:absolute;left:342.72px;top:230.82px" class="cls_007"><span class="cls_007">exchange for the
+					Goods or a Delivery Order or the pin codes for any applicable Electronic Release System.</span></div>
+			<div style="position:absolute;left:342.72px;top:236.50px" class="cls_007"><span class="cls_007">If this is a
+					non-negotiable (straight) Bill of Lading, or where issued as a Sea Waybill, the Carrier shall
+					deliver</span></div>
+			<div style="position:absolute;left:342.72px;top:242.19px" class="cls_007"><span class="cls_007">the Goods or
+					issue a Delivery Order or the pin codes for any applicable Electronic Release System (after</span></div>
+			<div style="position:absolute;left:342.72px;top:247.88px" class="cls_007"><span class="cls_007">payment of
+					outstanding Freight) to the named consignee against the surrender of one original Bill of Lading,</span>
+			</div>
+			<!-- <div style="position:absolute;left:227.22px;top:245.72px" class="cls_002"><span class="cls_002">>N</span></div> -->
+			<div style="position:absolute;left:342.72px;top:253.57px" class="cls_007"><span class="cls_007">or in the case
+					of a Sea Waybill, on production of such reasonable proof of identify as may be required by the</span>
+			</div>
+			<div style="position:absolute;left:342.72px;top:259.26px" class="cls_007"><span class="cls_007">Carrier, or in
+					accordance with the national law at the Port of Discharge or Place of Delivery as applicable. IN</span>
+			</div>
+			<div style="position:absolute;left:342.72px;top:264.94px" class="cls_007"><span class="cls_007">WITNESS WHEREOF
+					the Carrier or their Agent has signed the number of Bills of Lading stated at the top,</span></div>
+			<div style="position:absolute;left:342.72px;top:270.63px" class="cls_007"><span class="cls_007">all of this
+					tenor and date, and whenever one original Bill of Lading has been surrendered all other Bills of</span>
+			</div>
+			<!-- <div style="position:absolute;left:185.76px;top:271.91px" class="cls_002"><span class="cls_002">HAKATA</span>
+			</div> -->
+			<div style="position:absolute;left:342.72px;top:276.32px" class="cls_007"><span class="cls_007">Lading shall be
+					void.</span></div>
+
+			<div style="position:absolute;left:30.02px;top:209.10px" class="cls_002"><span id="notify" data-type="textarea" class="cls_002"
+					style="white-space: pre-line">{{notify}}</span></div>
+
+			<!-- <div style="position:absolute;left:227.23px;top:247.72px" class="cls_002"><span class="cls_002">>N</span></div> -->
+		
+			<div style="position:absolute;left:32.04px;top:266.80px" class="cls_006"><span class="cls_006">PRE-CARRIAGE
+					BY</span></div>
+			<div style="position:absolute;left:187.78px;top:266.80px" class="cls_006"><span class="cls_006">PLACE
+					OF
+					RECEIPT</span></div>
+			
+			<div style="position:absolute;left:185.76px;top:273.91px" class="cls_002"><span id="place_of_receipt"
+					class="cls_002" style="white-space: pre-line">{{place_of_receipt}}</span></div>
+			
+			<div style="position:absolute;left:32.04px;top:287.97px" class="cls_006"><span class="cls_006">OCEAN
+					VESSEL
+					VOYAGE NO. FLAG</span></div>
+			<div style="position:absolute;left:187.78px;top:287.97px" class="cls_006"><span class="cls_006">PORT OF
+					LOADING</span></div>
+			<div style="position:absolute;left:343.94px;top:287.97px" class="cls_006"><span class="cls_006">FINAL
+					DESTINATION(for the Merchant's reference only)</span></div>
+			<div style="position:absolute;left:29.95px;top:294.45px" class="cls_008"><span id="vessel" class="cls_008"
+					style="white-space: pre-line">{{vessel}}</span></div>
+			<div style="position:absolute;left:185.76px;top:296.54px" class="cls_002"><span id="port_of_loading"
+					class="cls_002" style="white-space: pre-line">{{port_of_loading}}</span></div>
+			<div style="position:absolute;left:32.54px;top:312.74px" class="cls_006"><span class="cls_006">PORT OF
+					DISCHARGE</span></div>
+			<div style="position:absolute;left:187.78px;top:312.74px" class="cls_006"><span class="cls_006">PLACE
+					OF
+					DELIVERY</span></div>
+			<div style="position:absolute;left:341.93px;top:312.74px" class="cls_006"><span class="cls_006">TYPE OF
+					MOVEMENT(IF MIXED, USE DESCRIPTION OF PACKAGES AND GOODS FIELD)</span></div>
+			<div style="position:absolute;left:29.81px;top:321.65px" class="cls_002"><span id="port_of_discharge"
+					class="cls_002" style="white-space: pre-line">{{port_of_discharge}}</span></div>
+			<div style="position:absolute;left:185.76px;top:321.94px" class="cls_009"><span id="place_of_delivery"
+					class="cls_009" style="white-space: pre-line">{{place_of_delivery}}</span></div>
+					<div style="position:absolute;left:341.93px;top:319.50px" class="cls_002"><span id="type_of_service" class="cls_002" style="white-space: pre-line">{{type_of_service}}</span></div>
+			<div style="position:absolute;left:511.06px;top:320.22px" class="cls_009"><span id="movement_type" class="cls_009" >{{movement_type}}</span></div>
+			<div style="position:absolute;left:31.97px;top:336.78px" class="cls_006"><span class="cls_006">(CHECK
+					"HM"
+					COLUMN IF HAZARDOUS MATERIAL)</span></div>
+			<div style="position:absolute;left:161.71px;top:336.06px" class="cls_010"><span class="cls_010">PARTICULARS
+					DECLARED BY SHIPPER BUT NOT ACKNOWLEDGED BY THE CARRIER</span></div>
+			<div style="position:absolute;left:57.74px;top:345.79px" class="cls_011"><span class="cls_011">CNTR.
+					NOS.
+					W/SEAL NOS.</span></div>
+			<div style="position:absolute;left:160.99px;top:344.07px" class="cls_011"><span class="cls_011">QUANTITY</span></div>
+			<div style="position:absolute;left:205.34px;top:345.79px" class="cls_011"><span class="cls_011">H</span></div>
+			<div style="position:absolute;left:155.16px;top:348.60px" class="cls_011"><span class="cls_011">(FOR
+					CUSTOMS</span></div>
+			<div style="position:absolute;left:292.03px;top:351.03px" class="cls_011"><span class="cls_011">DESCRIPTION
+					OF
+					GOODS</span></div>
+			<div style="position:absolute;left:453.82px;top:351.53px" class="cls_011"><span class="cls_011">GROSS
+					WEIGHT</span></div>
+			<div style="position:absolute;left:520.92px;top:350.95px" class="cls_011"><span class="cls_011">GROSS
+					MEASUREMENT</span></div>
+			<div style="position:absolute;left:63.79px;top:350.34px" class="cls_011"><span class="cls_011">MARKS &
+					NUMBERS</span></div>
+			<div style="position:absolute;left:149.47px;top:353.14px" class="cls_011"><span class="cls_011">DECLARATION
+					ONLY)</span></div>
+			<div style="position:absolute;left:205.06px;top:350.34px" class="cls_011"><span class="cls_011">M</span></div>
+			<div style="position:absolute;left:27.22px;top:361.54px" class="cls_009"><span class="cls_009" id="marks" style="white-space: pre-line">{{marks}}</span></div>
+			<!-- <div style="position:absolute;left:119.81px;top:359.54px" class="cls_009"><span class="cls_009">/ JPA374404</span></div> -->
+			<div style="position:absolute;left:217.04px;top:364.54px;" class="cls_00"><span id="description" data-type="textarea" class="cls_002" style="white-space: pre-line">{{no_of_packages}} {{description}} </span></div>
+
+			<!-- <div style="position:absolute;left:27.22px;top:380.85px" class="cls_009"><span class="cls_009">NYKU0852536</span></div> -->
+			<!-- <div style="position:absolute;left:119.81px;top:380.85px" class="cls_009"><span class="cls_009">/ JPA374405</span></div> -->
+			<!-- <div style="position:absolute;left:27.22px;top:391.50px" class="cls_009"><span class="cls_009">TCLU1547259</span></div> -->
+			<!-- <div style="position:absolute;left:119.81px;top:391.50px" class="cls_009"><span class="cls_009">/ JPA374408</span></div> -->
+			<!-- <div style="position:absolute;left:351.65px;top:391.50px" class="cls_009"><span class="cls_009">/FCL /
+			FCL/40HQ//</span></div> -->
+			<!-- <div style="position:absolute;left:29.95px;top:409.43px" class="cls_002"><span class="cls_002">N/M</span></div> -->
+			<!-- <div style="position:absolute;left:177.19px;top:409.43px" class="cls_002"><span class="cls_002">3293</span></div> -->
+			<!-- <div style="position:absolute;left:216.86px;top:409.43px" class="cls_002"><span class="cls_002">TIRES</span></div> -->
+			<div style="position:absolute;left:430.87px;top:409.79px" class="cls_018"><span id="total_gross_weight" data-type="textarea"
+					class="cls_018" style="white-space: pre-line">{{total_gross_weight}}</span></div>
+			<div style="position:absolute;left:512.15px;top:409.79px" class="cls_018"><span id="total_measurement" data-type="textarea"
+					class="cls_018" style="white-space: pre-line">{{total_measurement}}</span></div>
+			<!-- <div style="position:absolute;left:165.24px;top:420.09px" class="cls_002"><span class="cls_002">PIECES</span></div> -->
+			<!-- <div style="position:absolute;left:216.86px;top:420.09px" class="cls_002"><span class="cls_002">INVOICE -->
+			<!-- NO.NHPE-18-1034-J/M</span></div> -->
+			<!-- <div style="position:absolute;left:216.86px;top:440.82px" class="cls_002"><span class="cls_002">HS CODE 4011.10</span></div> -->
+			<!-- <div style="position:absolute;left:216.86px;top:461.56px" class="cls_002"><span class="cls_002">FREIGHT PREPAID</span></div> -->
+			<!-- <div style="position:absolute;left:216.86px;top:482.30px" class="cls_002"><span class="cls_002">></span></div> -->
+			<!-- <div style="position:absolute;left:190.66px;top:521.03px" class="cls_002"><span class="cls_002">** TO
+					BE
+					CONTINUED ON ATTACHED LIST **</span></div> -->
+			<div style="position:absolute;left:29.09px;top:536.22px" class="cls_012"><span class="cls_012">Declared
+					Cargo
+					Value US $</span></div>
+			<div style="position:absolute;left:191.38px;top:536.22px" class="cls_012"><span class="cls_012">. If
+					Merchant
+					enters a value, Carrier's limitation of liability shall not apply and the ad valorem rate will
+					be
+					charged.
+				</span>
+			</div>
+			<div style="position:absolute;left:500.38px;top:534.22px" class="cls_012"><span id="freight_term" class="cls_002" style="white-space: pre-line">{{freight_term}}
+			</span>
+		</div>
+			<div style="position:absolute;left:30.10px;top:545.30px" class="cls_006"><span class="cls_006">FREIGHT
+					&
+					CHARGES PAYABLE AT / BY:</span></div>
+			<div style="position:absolute;left:130.10px;top:545.30px" class="cls_006"><span id="freight_payable_at" style="white-space: pre-line" class="cls_002">{{freight_payable_at}}</span></div>
+			<div style="position:absolute;left:232.20px;top:545.30px" class="cls_006"><span class="cls_006">SERVICE
+					CONTRACT NO.</span></div>
+			<div style="position:absolute;left:306.94px;top:545.30px" class="cls_006"><span class="cls_006">DOC
+					FORM NO.</span></div>
+			<div style="position:absolute;left:357.70px;top:545.30px" class="cls_006"><span class="cls_006">COMMODITY
+					CODE</span></div>
+			<div style="position:absolute;left:413.93px;top:545.30px" class="cls_006"><span class="cls_006">EXCHANGE
+					RATE</span></div>
+			<div style="position:absolute;left:490.97px;top:578.18px" class="cls_013"><span id="original_requirements" style="white-space: pre-line" class="cls_002">{{original_requirements}}</span></div>
+			<!-- <div style="position:absolute;left:28.08px;top:551.63px" class="cls_008"><span class="cls_008">TOKYO, TOKYO</span></div> -->
+			<!-- <div style="position:absolute;left:223.27px;top:549.69px" class="cls_002"><span class="cls_002">TYON00369</span></div> -->
+			<!-- <div style="position:absolute;left:490.97px;top:558.26px" class="cls_013"><span class="cls_013">BEEN
+					SIGNED.</span></div> -->
+			<div style="position:absolute;left:36.29px;top:563.87px" class="cls_014"><span class="cls_014">CODE</span></div>
+			<div style="position:absolute;left:80.21px;top:563.87px" class="cls_014"><span class="cls_014">TARIFF
+					ITEM</span></div>
+			<div style="position:absolute;left:142.85px;top:563.87px" class="cls_014"><span class="cls_014">FREIGHTED
+					AS</span></div>
+			<div style="position:absolute;left:209.38px;top:563.87px" class="cls_014"><span class="cls_014">RATE</span></div>
+			<div style="position:absolute;left:269.86px;top:563.87px" class="cls_014"><span class="cls_014">PREPAID</span></div>
+			<div style="position:absolute;left:354.46px;top:563.87px" class="cls_014"><span class="cls_014">COLLECT</span></div>
+			<div style="position:absolute;left:490.97px;top:600.66px" class="cls_006"><span class="cls_006">DATE
+					CARGO
+					RECEIVED</span></div>
+			<div style="position:absolute;left:490.97px;top:623.06px" class="cls_006"><span class="cls_006">DATE
+					LADEN ON
+					BOARD</span></div>
+			<div style="position:absolute;left:490.10px;top:628.38px" class="cls_002"><span id="etd_date_laden_onboard" style="white-space: pre-line" class="cls_002">{{etd_date_laden_onboard}}</span></div>
+			<div style="position:absolute;left:490.97px;top:644.22px" class="cls_006"><span class="cls_006">PLACE
+					OF
+					BILL(S) ISSUE</span></div>
+			<div style="position:absolute;left:488.95px;top:650.27px" class="cls_002"><span id="place_of_issue" style="white-space: pre-line" class="cls_002">{{place_of_issue}}</span></div>
+			<div style="position:absolute;left:490.97px;top:666.04px" class="cls_006"><span class="cls_006">DATED</span></div>
+			<!-- <div style="position:absolute;left:488.95px;top:671.44px" class="cls_002"><span class="cls_002">29 NOV 2018</span></div> -->
+			<div style="position:absolute;left:28.08px;top:686.70px" class="cls_014"><span class="cls_014">The
+					printed
+					terms and conditions on this Bill are available at its</span></div>
+			<!-- <div style="position:absolute;left:411.98px;top:686.70px" class="cls_006"><span class="cls_006">SIGNED</span></div> -->
+			<!-- <div style="position:absolute;left:432.58px;top:685.77px" class="cls_016"><span class="cls_016">OCEAN
+					NETWORK
+					EXPRESS (JAPAN)</span></div> -->
+			<!-- <div style="position:absolute;left:28.08px;top:693.33px" class="cls_014"><span class="cls_014">website
+					at
+				</span><A HREF="http://www.one-line.com/">www.one-line.com</A> </div>
+			<div style="position:absolute;left:411.98px;top:692.25px" class="cls_006"><span class="cls_006">BY:</span></div> -->
+			<!-- <div style="position:absolute;left:432.58px;top:693.69px" class="cls_016"><span class="cls_016">LTD.</span></div> -->
+			<!-- <div style="position:absolute;left:499.39px;top:704.85px" class="cls_015"><span class="cls_015">, as
+					agent for
+					and on behalf of</span></div> -->
+			<!-- <div style="position:absolute;left:411.55px;top:755.90px" class="cls_009"><span class="cls_009">Ocean
+					Network
+					Express Pte. Ltd.</span></div> -->
+			<!-- <div style="position:absolute;left:411.55px;top:765.62px" class="cls_009"><span class="cls_009">(ONE),
+					AS
+					CARRIER</span></div> -->
+		</div>
+		<div id="doc_id" hidden>{{id}}</div>
+		<!-- Dong Phan -->
+		 <!-- jQuery -->
+		 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+		 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+	 
+		 <!-- x-editable (bootstrap version) -->
+		 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+	 
+		 <!-- toastr notification -->
+		 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" integrity="sha256-3blsJd4Hli/7wCQ+bmgXfOdK7p/ZUMtPXY08jmxSSgk=" crossorigin="anonymous">
+		 </script>
+		 <script>
+		   
+		 </script>
+		<script src="{% static 'js/doc_template.js' %}"></script>
+		<script src="{% static 'js/ajax_csrf.js' %}"></script>
+		<script type="text/javascript"> var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val(); </script>
+  
+	</body>
+</html>
