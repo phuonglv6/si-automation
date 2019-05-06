@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "base_generic.html" %}
 {% load static %}
 {% load extraTags %}
 
@@ -11,7 +11,10 @@
 
 {% block content %}
 
+  
+
   <div id="main-content" style="display: inline-block; width: 100%;">
+    <div id="help-button">?</div>
     <div id="canWrap" class="canvasWrapper">
       <canvas id="imgCanvas" style="position: relative"></canvas>
     </div>
@@ -32,19 +35,20 @@
       <div id="submit-button"><b> SUBMIT </b></div>
     </div>
   </div>
-    <table id="existCor" class='exist' hidden>
-      <tbody>
-        {% for field in fields %}
-          <tr>
-            <td class='exist fName'>{{field.name}}</td>
-            <td class='exist fX1'>{{field.x1}}</td>
-            <td class='exist fY1'>{{field.y1}}</td>
-            <td class='exist fX2'>{{field.x2}}</td>
-            <td class='exist fY2'>{{field.y2}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  
+  <table id="existCor" class='exist' hidden>
+    <tbody>
+      {% for field in fields %}
+        <tr>
+          <td class='exist fName'>{{field.name}}</td>
+          <td class='exist fX1'>{{field.x1}}</td>
+          <td class='exist fY1'>{{field.y1}}</td>
+          <td class='exist fX2'>{{field.x2}}</td>
+          <td class='exist fY2'>{{field.y2}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
     
 {% endblock content %}

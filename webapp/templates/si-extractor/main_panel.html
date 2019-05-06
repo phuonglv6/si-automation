@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "base_generic.html" %}
 {% load static %}
 
 {% block css %}
@@ -35,7 +35,7 @@
       <form id="upload_form" method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="file-upload" class="custom-button">
-          <i class="fa fa-cloud-upload"></i> Other upload
+          <i class="fa fa-cloud-upload"></i> UPLOAD SI
         </label>
         <input id="file-upload" type="file"/>
       </form>
@@ -50,6 +50,5 @@
 {% endblock %}
 
 {% block js %}
-  <script src="{% static 'js/list.js' %}"></script>
   <script src="{% static 'js/index.js' %}"></script>
 {% endblock js %}

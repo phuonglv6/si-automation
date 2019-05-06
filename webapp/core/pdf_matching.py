@@ -1,5 +1,5 @@
 from pdf2image import convert_from_bytes
-from .lib import getTableFromImage, getDistance
+from .lib import getTableFromImage, getDistance, hasTable, process_image
 import os
 import pickle
 import numpy as np
@@ -10,14 +10,18 @@ from operator import itemgetter  # add to pdfreader
 from itertools import groupby
 import fitz  # PyMuPDF
 from pathlib import Path
-
+from ..library.diffimg import diff
+from PIL import Image
 from django.conf import settings
+from shutil import copyfile
 
 # define some threshold for matching tasks
 meanLow = 2
 meanDiffThre = 0.3
 distLow = 0.004
 distHigh = 0.007
+
+MEDIA_DIR = settings.MEDIA_ROOT
 
 # set height, width for resizing img
 WIDTH = settings.NGHIA_WIDTH
@@ -61,15 +65,17 @@ def matchingForm(pdfPath, targetPath):
     input image is table-type only
     return folder name in targetPath if matched else 0
     """
-    img, num_pages = pdf2img(pdfPath)
+    image, num_pages = pdf2img(pdfPath)
     # img = cv2.resize(img, (WIDTH, HEIGHT))
-    raw = img.copy()
-    img, joint = getTableFromImage(img)
-
+    raw = image.copy()
+    img, joint = getTableFromImage(image)
+    if not hasTable(img, joint):
+        gray = process_image(image)
+        img, _ = getTableFromImage(gray)
     _, folders, _ = next(os.walk(targetPath))
-
+    root = None
+    newType = True
     if len(folders):
-        newType = True
         chosenFolderPath = ''
         result = 0
         for folder in folders:
@@ -77,13 +83,13 @@ def matchingForm(pdfPath, targetPath):
             if Path(rootPath).is_file():
                 with open(rootPath, 'rb') as file:
                     root = pickle.load(file)
+
                     if img.shape == root.shape:
                         dist = getDistance(root, img)
                         meanRoot = np.mean(root)
                         sub1 = np.subtract(root, img)
                         sub2 = np.subtract(img, root)
                         meanSub = min(np.mean(sub1), np.mean(sub2))
-
                         if (
                             (meanRoot < meanLow) and
                             (dist < distLow) and
@@ -102,13 +108,32 @@ def matchingForm(pdfPath, targetPath):
                                 if tmp < result:
                                     result = tmp
                                     chosenFolderPath = folder
-            else:
-                chosenFolderPath = folder
-        if newType:
-            return 0, raw, num_pages
-        else:
-            return chosenFolderPath, raw, num_pages
-    return 0, raw, num_pages
+
+    if newType:
+        sameTemplateFolder = findSameTemplate(img, targetPath, folders)
+        return 0, raw, num_pages, sameTemplateFolder
+    else:
+        return chosenFolderPath, raw, num_pages, None
+
+
+def findSameTemplate(img, targetPath, folders):
+    """
+        Compare 2 pdf to find same the template
+        Note: Only kind of the template with Line
+    """
+    maxAccuracy = 0.01
+    sameTemplateFolder = None
+    for folder in folders:
+        rootPath = os.path.join(targetPath, folder, 'root.pickle')
+        if Path(rootPath).is_file():
+            with open(rootPath, 'rb') as file:
+                rootImg = pickle.load(file)
+                value = diff(Image.fromarray(img), Image.fromarray(
+                    rootImg), delete_diff_file=True)
+                if value < maxAccuracy:
+                    maxAccuracy = value
+                    sameTemplateFolder = folder
+    return sameTemplateFolder
 
 
 def lineRemove(img):
@@ -125,7 +150,7 @@ def pdfread(y1, x1, y2, x2, page):
         (w[0] + w[2]) / 2 + 1,
         (w[1] + w[3]) / 2 + 1,
         w[4], w[5], w[6], w[7]
-        ) for w in words]
+    ) for w in words]
     mywords = [w for w in words_bbox_resize if fitz.Rect(w[:4]) in rect]
     mywords.sort(key=itemgetter(3, 0))
     group = groupby(mywords, key=itemgetter(3))
@@ -174,26 +199,28 @@ def handleMatchedFile(chosenFolder, targetPath, img, jsonName, pdfPath):
     num_pages = len(doc)
     dbPath = os.path.join(targetPath, chosenFolder, 'root.txt')
 
-    try:
+    # test OCR
+    if Path(dbPath).is_file():
         f = open(dbPath, "r")
-    except FileNotFoundError:  # as e:
+        data = {}
+        nonOCR = False
+        for x in f:
+            key = x.split(' ')[0]
+            b = x.split(' ')[1:]
+            test_text = extract_value(b, num_pages, HEIGHT, size, doc)
+            if test_text != '':
+                nonOCR = True
+                break
+        f.close()
+        print('chosenFolder:', chosenFolder)
+    else:
         print('Cannot find annotation file in',
               targetPath + '/' + chosenFolder)
         return chosenFolder
 
-    data = {}
-    for x in f:
-        tmp = x.split(' ')
-        key = tmp[0]
-        if key == '0':
-            b = tmp[1:]
-            test_text = extract_value(b, num_pages, HEIGHT, size, doc)
-
-    f.close()
-
     # PDF can SELECT text
-    if test_text != '':
-        print('TEXT*********************************************')
+    if nonOCR is True:
+        print('TEXT**********************************************************')
         f = open(dbPath, "r")
         for x in f:
             tmp = x.split(' ')
@@ -202,7 +229,7 @@ def handleMatchedFile(chosenFolder, targetPath, img, jsonName, pdfPath):
             data[classes[key]] = extract_value(
                 b, num_pages, HEIGHT, size, doc)
     else:
-        print('OCR#################################################3')
+        print('OCR###########################################################')
         f = open(dbPath, "r")
         for x in f:
             tmp = x.split(' ')
@@ -236,15 +263,30 @@ def handleMatchedFile(chosenFolder, targetPath, img, jsonName, pdfPath):
     return data
 
 
-def handleUnmatchedFile(targetPath, img):
-    img1, _ = getTableFromImage(img)
+def handleUnmatchedFile(targetPath, img, sameTemplateFolder):
     _, folders, _ = next(os.walk(targetPath))
-    newType = str(len(folders) + 1)
-    os.mkdir(os.path.join(targetPath, newType))
-    rootPath = os.path.join(targetPath, newType, 'root.pickle')
+    # TODO: out folder must not have sub-folder that have name is in alphabet
+    newType = str(max(map(int, folders)) + 1)
+    newTypePath = os.path.join(targetPath, newType)
+    os.mkdir(newTypePath)
+    # Check has the same template
+    if sameTemplateFolder is not None:
+        source_path = os.path.join(targetPath, sameTemplateFolder, 'root.txt')
+        if Path(source_path).is_file():
+            copyfile(source_path, os.path.join(newTypePath, 'root.txt'))
+
     # Save IMG to media\annotate
-    img_path = os.path.join(settings.MEDIA_ROOT, 'annotate', newType + '.png')
+    if not Path(os.path.join(MEDIA_DIR, 'annotate')).is_dir():
+        os.mkdir(os.path.join(MEDIA_DIR, 'annotate'))
+    img_path = os.path.join(MEDIA_DIR, 'annotate', newType + '.png')
     cv2.imwrite(img_path, img)
+
+    # Save pickle table img
+    img1, joint = getTableFromImage(img)
+    if not hasTable(img1, joint):
+        gray = process_image(img)
+        img1, _ = getTableFromImage(gray)
+    rootPath = os.path.join(targetPath, newType, 'root.pickle')
     with open(rootPath, 'wb') as handle:
         pickle.dump(img1, handle, protocol=pickle.HIGHEST_PROTOCOL)
     return newType

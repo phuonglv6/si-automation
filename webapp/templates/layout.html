@@ -15,6 +15,9 @@
     <!-- toastr notification -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" integrity="sha256-ENFZrbVzylNbgnXx0n3I1g//2WeO47XxoPe0vkp3NC8=" crossorigin="anonymous" />
 
+    <!-- jQuery Confirm Modal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
     {% block css %}{% endblock css %}
   </head>
 
@@ -34,25 +37,51 @@
     <!-- toastr notification -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" integrity="sha256-3blsJd4Hli/7wCQ+bmgXfOdK7p/ZUMtPXY08jmxSSgk=" crossorigin="anonymous">
     </script>
+    <!-- jQuery Confirm Modal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
     <script>
       toastr.options = {  
-          "closeButton": true,
-          "debug": false,
-          "newestOnTop": true,
-          "progressBar": false,
-          "positionClass": "toast-top-center",
-          "preventDuplicates": false,
-          "onclick": null,
-          "showDuration": "700",
-          "hideDuration": "1000",
-          "timeOut": "8000",
-          "extendedTimeOut": "1000",
-          "showEasing": "swing",
-          "hideEasing": "linear",
-          "showMethod": "fadeIn",
-          "hideMethod": "fadeOut",
-        }
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "700",
+        "hideDuration": "1000",
+        "timeOut": "8000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut",
+      };
+      jconfirm.defaults = {
+        draggable: false,
+        animateFromElement: true,
+        smoothContent: true,
+        theme: 'light',
+        animation: 'scale',
+        closeAnimation: 'scale',
+        animationSpeed: 400,
+        animationBounce: 0,
+        rtl: false,
+        container: 'body',
+        containerFluid: false,
+        backgroundDismiss: true,
+        backgroundDismissAnimation: 'shake',
+        closeIcon: null,
+        closeIconClass: false,
+        watchInterval: 100,
+        columnClass: 'small',
+        scrollToPreviousElement: true,
+        scrollToPreviousElementAnimate: true,
+        useBootstrap: true,
+        offsetTop: 40,
+        offsetBottom: 40,
+      };
     </script>
 
     <!-- CSRF -->

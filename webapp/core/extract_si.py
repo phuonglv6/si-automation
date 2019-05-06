@@ -97,14 +97,13 @@ def convert_to(folder, source, timeout=None):
 
 def extract_text(file_path, outPath):
     pdf_path = file_type_to_pdf(file_path)
-    chosenFolder, img, num_pages = matchingForm(pdf_path, outPath)
-    if chosenFolder:  # Match template in DB
+    chosenNo, img, num_pages, sameTemplateNo = matchingForm(pdf_path, outPath)
+    if chosenNo:  # Match template in DB
         jsonName = pdf_path.split('/')[-1].split('.')[0] + '.json'
         data_result = handleMatchedFile(
-            chosenFolder, outPath, img, jsonName, pdf_path)
+            chosenNo, outPath, img, jsonName, pdf_path)
     else:  # new type case
-        data_result = handleUnmatchedFile(outPath, img)
-
+        data_result = handleUnmatchedFile(outPath, img, sameTemplateNo)
     return data_result, num_pages
 
 
@@ -116,27 +115,3 @@ def file_type_to_pdf(file_path):
         return pdf_path
     else:
         return file_path
-
-
-# def handle_pdf(file_path, outPath):
-#     chosenFolder, img, num_pages = matchingForm(file_path, outPath)
-#     if chosenFolder:  # Match template in DB
-#         num_pages = None
-#         jsonName = file_path.split('/')[-1].split('.')[0] + '.json'
-#         data_result = handleMatchedFile(
-#                 chosenFolder, outPath, img, jsonName, file_path)
-#     else:  # new type case
-#         data_result = handleUnmatchedFile(outPath, img)
-
-#     return data_result, num_pages
-
-
-# def extract_text(file_path, outPath):
-#     if file_path.endswith('.docx') or file_path.endswith('.doc') or \
-#           file_path.endswith('.xls') or file_path.endswith('.xlsx'):
-#         filename = convert_to(outPath, file_path)
-#         data_result, num_pages = handle_pdf(filename, outPath)
-#         os.remove(filename)
-#     else:
-#         data_result, num_pages = handle_pdf(file_path, outPath)
-#     return data_result, num_pages
