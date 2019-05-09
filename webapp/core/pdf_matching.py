@@ -1,18 +1,18 @@
 from pdf2image import convert_from_bytes
-from .lib import getTableFromImage, getDistance, hasTable, process_image
+from ..util.util import getTableFromImage, getDistance, hasTable, process_image
 import os
 import pickle
 import numpy as np
 import cv2
 import pytesseract as pt
-from .cropUtils import process_crop_image
+from ..util.crop_image import process_crop_image
+from ..util.consts import WIDTH_FOR_ANNOTATION,HEIGHT_FOR_ANNOTATION,WIDTH_FOR_EXTRACTION,HEIGHT_FOR_EXTRACTION,SIBL_CLASSES,MEDIA_DIR
 from operator import itemgetter  # add to pdfreader
 from itertools import groupby
 import fitz  # PyMuPDF
 from pathlib import Path
-from ..library.diffimg import diff
+from ..util.diff_images import diff
 from PIL import Image
-from django.conf import settings
 from shutil import copyfile
 
 # define some threshold for matching tasks
@@ -21,16 +21,15 @@ meanDiffThre = 0.3
 distLow = 0.004
 distHigh = 0.007
 
-MEDIA_DIR = settings.MEDIA_ROOT
 
 # set height, width for resizing img
-WIDTH = settings.NGHIA_WIDTH
-HEIGHT = settings.NGHIA_HEIGHT
-A4_WIDTH = settings.A4_WIDTH
-A4_HEIGHT = settings.A4_HEIGHT
+WIDTH     = WIDTH_FOR_ANNOTATION
+HEIGHT    = HEIGHT_FOR_ANNOTATION
+A4_WIDTH  = WIDTH_FOR_EXTRACTION
+A4_HEIGHT = HEIGHT_FOR_EXTRACTION
 
 # class dict
-classes = settings.SIBL_CLASSES
+classes = SIBL_CLASSES
 
 
 def pdf2img(pdfPath):
@@ -266,8 +265,12 @@ def handleMatchedFile(chosenFolder, targetPath, img, jsonName, pdfPath):
 def handleUnmatchedFile(targetPath, img, sameTemplateFolder):
     _, folders, _ = next(os.walk(targetPath))
     # TODO: out folder must not have sub-folder that have name is in alphabet
+    print("handleUnmatchedFile: targetPath: ",targetPath)
+    print("handleUnmatchedFile: folders: ",folders)
+
     newType = str(max(map(int, folders)) + 1)
     newTypePath = os.path.join(targetPath, newType)
+
     os.mkdir(newTypePath)
     # Check has the same template
     if sameTemplateFolder is not None:

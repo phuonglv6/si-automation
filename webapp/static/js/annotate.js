@@ -28,7 +28,9 @@ $('#detailTable').find('tr.field').first().click();
 var canvas = document.getElementById("imgCanvas");
 var wrapper = document.getElementById('canWrap');
 var imageObj = new Image();
-imageObj.src = '../../../media/annotate/' + $('#pk').text() + '.png';
+// imageObj.src = '../../../media/annotate/' + $('#pk').text() + '.png';
+imageObj.src = '../../../static/media/annotate/' + $('#pk').text() + '.png';
+
 
 getExistBoxese();
 
@@ -514,7 +516,7 @@ $('#submit-button').click(function () {
 function ajax_submiting(f_data) {
   console.log("$&$ Submiting Annotate Cordinate $&$");
   $.ajax({
-    url: "/drafting/annotation/" + $("#pk").text() + "/",
+    url: "/annotation/process/" + $("#pk").text() + "/",
     type: "POST",
     data: JSON.stringify(f_data),
     dataType: "json",

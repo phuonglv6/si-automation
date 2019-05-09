@@ -1,12 +1,10 @@
-{% extends "base_generic.html" %}
-{% load static %}
-{% load extraTags %}
+{% extends "layout.html" %}
 
-{% block title %}<title> Annotation {{ pk }} </title>{% endblock %}
+{% block title %}<title> Annotation {{ data.pk }} </title>{% endblock %}
 {% block css %}
   <meta name="viewport" content="user-scalable=no, width=device-width"/>
-  <link rel="stylesheet" href="{% static 'css/annotate.css' %}"/>
-  <link rel="stylesheet" href="{% static 'css/loader.css' %}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/annotate.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}"/>
 {% endblock css %}
 
 {% block content %}
@@ -22,10 +20,10 @@
       <div id="fieldList">
         <table id="detailTable" class="table table-bordered table-striped">
           <tbody>
-            <tr><td width="70%"><b> Template No. </b></td><td id="pk"><b>{{ pk }}</b></td></tr>
-            {% for key in classes.values %}
+            <tr><td width="70%"><b> Template No. </b></td><td id="pk"><b>{{ data.pk }}</b></td></tr>
+            {% for key in data.classes.values() %}
               <tr class='field'>
-                <td><b> {{ key|upper|replaceUnderScore }} </b></td>
+                <td><b> {{ key|upper|replace_under_score }} </b></td>
                 <td class="cor" id="{{ key }}"></td>
               </tr>
             {% endfor %}
@@ -38,7 +36,7 @@
   
   <table id="existCor" class='exist' hidden>
     <tbody>
-      {% for field in fields %}
+      {% for field in data.fields %}
         <tr>
           <td class='exist fName'>{{field.name}}</td>
           <td class='exist fX1'>{{field.x1}}</td>
@@ -53,7 +51,7 @@
     
 {% endblock content %}
 {% block js %}
-  <script type="text/javascript" src="{% static 'js/annotate_setup.js'%}"></script>
-  <script type="text/javascript" src="{% static 'js/annotate.js'%}"></script>
-  {% comment %} <script type="text/javascript" src="{% static 'js/upload_crop.js'%}"></script> {% endcomment %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/annotate_setup.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/annotate.js') }}"></script>
+  <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/upload_crop.js') }}" ></script> -->
 {% endblock js %}

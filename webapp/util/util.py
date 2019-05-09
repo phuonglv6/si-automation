@@ -159,3 +159,8 @@ def process_image(image):
                       , (0,0,255), 1)
 
     return gray
+def require_config(app):
+    def decorated_function():
+        
+        return function_to_decorate()
+    return decorated_function

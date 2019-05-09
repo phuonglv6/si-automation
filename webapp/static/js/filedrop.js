@@ -110,7 +110,7 @@ function uploadData(formdata) {
 function detailExtract(data) {
 	console.log('$ forwarding to Extracting $');
 	$.ajax({
-		url: 'process/',
+		url: 'extractor/process/',
 		type: 'POST',
 		data: {'filename': data.filename},
 		dataType: 'json',
@@ -119,7 +119,7 @@ function detailExtract(data) {
 			console.log(data);
 			if (data.hasOwnProperty('temp_num')) {
 				// NEED to ANNOTATE
-				window.location.href = "/drafting/annotation/" + data.temp_num;
+				window.location.href = "/annotation/process/" + data.temp_num;
 			} else if (data.hasOwnProperty('doc')) {
 				// SUCCESS
 				window.location.href = "/drafting/index/";
