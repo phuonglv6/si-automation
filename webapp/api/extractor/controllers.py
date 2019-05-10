@@ -1,9 +1,10 @@
 import os
+import re
 from flask import Blueprint, redirect, url_for, render_template,request,jsonify,Response,flash,current_app,session
 from werkzeug.utils import secure_filename
 from ...core.si_extractor import extract_text,extract_file
 from ...util.consts import SIBL_CLASSES
-
+from ..models import Doc
 classes = SIBL_CLASSES
 extractor_blueprint = Blueprint(
     'extractor',
@@ -30,3 +31,50 @@ def process():
         resp.status_code = status 
         return resp
 
+@extractor_blueprint.route('/main_panel/')
+def main_panel():
+    return render_template('extractor/main_panel.html')
+
+@extractor_blueprint.route('/list/')
+def list():
+    # doc = model_to_dict(Doc.objects.all().latest('id'))
+    doc= Doc.query.order_by(Doc.id.desc()).first()
+    data = {'docs': doc.to_dict(show_all=True)}
+    print("Data:",data)
+    resp = jsonify(data)
+    return resp
+
+@extractor_blueprint.route('/pdf/<int:pk>/')
+def pdf(pk):
+    print("pdf route")
+    # data = Doc.query.filter_by(id=Doc.id).first()
+    data = Doc.query.get(pk)
+    return render_template('extractor/left_panel.html', data=data)
+
+@extractor_blueprint.route('/preview/<int:pk>/')
+def preview(pk):
+    # doc = Doc.objects.get(id=pk)
+    print("Previvew route")
+    doc = Doc.query.get(pk)
+    hs_codes = {}
+    if doc.hs_code:
+        for hs_code in doc.hs_code.split(','):
+            hs_code = re.sub(r'\W+', '', hs_code)
+            hs_codes[hs_code] = 1
+
+    if doc.bl_type and len(hs_codes) > 0:
+        for hs_code in hs_codes.keys():
+            if hs_code in doc.bl_type:
+                hs_codes[hs_code] = 0
+
+    description_of_goods = doc.description_of_goods
+    payment = doc.payment.replace('"', '')
+    total_weight = doc.total_weight
+    total_measurement = doc.total_measurement
+    return render_template('extractor/right_panel.html', data={
+                'doc': doc, 'hs_codes': hs_codes,
+                'description_of_goods': description_of_goods,
+                'payment': payment,
+                'total_weight': total_weight,
+                'total_measurement': total_measurement
+            })

@@ -1,10 +1,9 @@
 {% extends "layout.html" %}
-{% load static %}
 
 {% block css %}
-  <link href="{% static 'css/styles.css' %}" rel=stylesheet>
-  <link href="{% static 'css/doc_template.css' %}" rel=stylesheet>
-  <link href="{% static 'css/loader.css' %}" rel=stylesheet>
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel=stylesheet>
+  <link href="{{ url_for('static', filename='css/doc_template.css') }}" rel=stylesheet>
+  <link href="{{ url_for('static', filename='css/loader.css') }}" rel=stylesheet>
   <style>
     div.container-fluid{
       height: 100%;
@@ -33,7 +32,6 @@
 {% block content %}
   <div class="header">
       <form id="upload_form" method="post" action="" enctype="multipart/form-data">
-        {% csrf_token %}
         <label for="file-upload" class="custom-button">
           <i class="fa fa-cloud-upload"></i> UPLOAD SI
         </label>
@@ -50,5 +48,5 @@
 {% endblock %}
 
 {% block js %}
-  <script src="{% static 'js/index.js' %}"></script>
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 {% endblock js %}

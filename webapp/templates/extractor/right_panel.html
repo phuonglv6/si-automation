@@ -2,12 +2,10 @@
 
 <head>
 	<meta http-equiv=Content-Type content="text/html; charset=UTF-8">
-	{% load static %}
-	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
 
 	<!-- x-editable (bootstrap version) -->
-	<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css"
-		rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet" />
 
 	<style type="text/css">
 		h1 {
@@ -601,7 +599,7 @@
 	</script>
 
 	<!-- Bootstrap -->
-	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+	<script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 
 	<!-- toastr notification -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
@@ -610,14 +608,13 @@
 		integrity="sha256-3blsJd4Hli/7wCQ+bmgXfOdK7p/ZUMtPXY08jmxSSgk=" crossorigin="anonymous">
 	</script>
 	<!-- CSRF -->
-	{% csrf_token %}
-	<script src="{% static 'js/ajax_csrf.js' %}"></script>
+	<script src="{{ url_for('static', filename='js/ajax_csrf.js') }}" ></script>
 </head>
 
 <body class="c20">
 	<div style="position:absolute;zoom: 170%;left: 35px; top:0px;width:596px;height:843px;border-style:outset;">
 		<div style="position:absolute;left:0px;top:0px">
-			<img src="{% static 'img/background1.jpg' %}" width=596 height=843></div>
+			<img src="{{ url_for('static', filename='img/background1.jpg') }}" width=596 height=843></div>
 		<div style="position:absolute;left:199.51px;top:21.71px" class="cls_005"><span class="cls_005">COPY NON
 				NEGOTIABLE</span></div>
 		<div style="position:absolute;left:516.46px;top:27.69px" class="cls_003"><span class="cls_003">PAGE:</span></div>
@@ -632,13 +629,13 @@
 		<div style="position:absolute;left:469.15px;top:60.23px" class="cls_006"><span class="cls_006">SEA
 				WAYBILL NO.</span></div>
 		<div style="position:absolute;left:341.93px;top:64.98px" class="cls_002"><span id="bkg_no" class="cls_002"
-				data-type="textarea" style="white-space: pre-line">{{ doc.bkg_no }}</span></div>
+				data-type="textarea" style="white-space: pre-line">{{ data.doc.bkg_no }}</span></div>
 		<div style="position:absolute;left:469.02px;top:64.98px" class="cls_002"><span id="bl_type" class="cls_002"
-				style="white-space: pre-line">ONEY{{ doc.bkg_no }}</span></div>
+				style="white-space: pre-line">ONEY{{ data.doc.bkg_no }}</span></div>
 		<div style="position:absolute;left:30.02px;top:68.08px" class="cls_002"><span class="emptyclass"
-				data-type="textarea" style="white-space: pre-line" id="shipper">{{ doc.shipper }}</span></div>
+				data-type="textarea" style="white-space: pre-line" id="shipper">{{ data.doc.shipper }}</span></div>
 		<div style="position:absolute;left:343.94px;top:80.48px;" class="cls_002"><span id="also_notify" class="cls_002"
-					style="white-space: pre-line">{{doc.also_notify}}
+					style="white-space: pre-line">{{data.doc.also_notify}}
 					<!--forwarding--> </span></div>
 		<div style="position:absolute;left:343.94px;top:130.94px;" class="cls_006"><span class="cls_006">FORWARDING
 				AGENT-REFERENCES</span></div>
@@ -648,7 +645,7 @@
 				style="white-space: pre-line">
 				<!--forwarding--> </span></div>
 		<div style="position:absolute;left:30.02px;top:141.85px" class="cls_002"><span id="consignee" class="cls_002"
-				style="white-space: pre-line">{{ doc.consignee }}</span></div>
+				style="white-space: pre-line">{{ data.doc.consignee }}</span></div>
 
 		<div style="position:absolute;left:342.72px;top:173.94px" class="cls_007"><span class="cls_007">RECEIVED by the
 				Carrier in apparent good order and condition (unless otherwise stated herein) the total</span></div>
@@ -711,7 +708,7 @@
 				void.</span></div>
 
 		<div style="position:absolute;left:30.02px;top:209.10px" class="cls_002"><span id="notify" data-type="textarea"
-				class="cls_002" style="white-space: pre-line">{{ doc.notify }}</span></div>
+				class="cls_002" style="white-space: pre-line">{{ data.doc.notify }}</span></div>
 
 		<!-- <div style="position:absolute;left:227.23px;top:247.72px" class="cls_002"><span class="cls_002">>N</span></div> -->
 
@@ -722,7 +719,7 @@
 				RECEIPT</span></div>
 
 		<div style="position:absolute;left:185.76px;top:273.91px" class="cls_002"><span id="place_of_receipt"
-				class="cls_002" style="white-space: pre-line">{{ doc.place_of_receipt }}</span></div>
+				class="cls_002" style="white-space: pre-line">{{ data.doc.place_of_receipt }}</span></div>
 
 		<div style="position:absolute;left:32.04px;top:287.97px" class="cls_006"><span class="cls_006">OCEAN
 				VESSEL
@@ -732,9 +729,9 @@
 		<div style="position:absolute;left:343.94px;top:287.97px" class="cls_006"><span class="cls_006">FINAL
 				DESTINATION(for the Merchant's reference only)</span></div>
 		<div style="position:absolute;left:29.95px;top:294.45px" class="cls_008"><span id="vessel" class="cls_002"
-				style="white-space: pre-line">{{ doc.vessel }} {{doc.voyage}}</span></div>
+				style="white-space: pre-line">{{ data.doc.vessel }} {{data.doc.voyage}}</span></div>
 		<div style="position:absolute;left:185.76px;top:296.54px" class="cls_002"><span id="port_of_loading" class="cls_002"
-				style="white-space: pre-line">{{ doc.port_of_loading }}</span></div>
+				style="white-space: pre-line">{{ data.doc.port_of_loading }}</span></div>
 		<div style="position:absolute;left:32.54px;top:312.74px" class="cls_006"><span class="cls_006">PORT OF
 				DISCHARGE</span></div>
 		<div style="position:absolute;left:187.78px;top:312.74px" class="cls_006"><span class="cls_006">PLACE
@@ -746,9 +743,9 @@
 		</div>
 
 		<div style="position:absolute;left:29.81px;top:321.65px" class="cls_002"><span id="port_of_discharge"
-				class="cls_002" style="white-space: pre-line">{{ doc.port_of_discharge }}</span></div>
+				class="cls_002" style="white-space: pre-line">{{ data.doc.port_of_discharge }}</span></div>
 		<div style="position:absolute;left:185.76px;top:321.94px" class="cls_009"><span id="place_of_delivery"
-				class="cls_009" style="white-space: pre-line">{{ doc.place_of_delivery }}</span></div>
+				class="cls_009" style="white-space: pre-line">{{ data.doc.place_of_delivery }}</span></div>
 		<div style="position:absolute;left:341.93px;top:319.50px" class="cls_002"><span id="type_of_service" class="cls_002"
 				style="white-space: pre-line"> FCL / FCL </span></div>
 		<div style="position:absolute;left:511.06px;top:320.22px" class="cls_009"><span id="movement_type" class="cls_009">
@@ -781,8 +778,8 @@
 
 		<div style="position:absolute;left:27.22px;top:361.54px; width: 555px; height: 180px;" class="cls_009">
 			<div>
-				{% if doc.containerdetail_set.all|length > 0 %}
-				{% for cont in doc.containerdetail_set.all %}
+				{% if data.doc.containerdetail.all|length > 0 %}
+				{% for cont in data.doc.containerdetail.all %}
 						{{ cont.container_no }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/{{ cont.seal_no }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ cont.packages }} 
 						&nbsp;&nbsp;&nbsp;&nbsp;/FCL&nbsp;/&nbsp;FCL/{{ cont.container_type }} /{{ cont.container_weight }}
 						/{{ cont.container_cbm }}<br>
@@ -793,7 +790,7 @@
 			<div style="border-bottom: 1px dashed gray 	"></div>
 			<div style="position:absolute;left:10.04px;" class="cls_00"> 
 				<span id="marks" class="cls_002" style="white-space: pre-line;">
-					{{doc.total_mark}}
+					{{data.doc.total_mark}}
 				</span>
 			</div>
 			<div style="position:absolute;left:190.04px;" class= "cls_009">
@@ -802,23 +799,23 @@
 				</span>
 			</div>
 			<div style="position:absolute;left:410.87px;" class="cls_018">
-				{% if doc.containerdetail_set.all|length > 0 %}
+				{% if data.doc.containerdetail.all|length > 0 %}
 				<span id="total_gross_weight" data-type="textarea" class="cls_018" style="white-space: pre-line">
-					{{ doc.total_weight }}
+					{{ data.doc.total_weight }}
 				</span>
 				{% endif %}
 			</div>
 			<div style="position:absolute;left:492.15px;" class="cls_018">
-				{% if doc.containerdetail_set.all|length > 0 %}
+				{% if data.doc.containerdetail.all|length > 0 %}
 					<span id="total_measurement" data-type="textarea" class="cls_018" style="white-space: pre-line">
-						{{ doc.total_measurement }}
+						{{ data.doc.total_measurement }}
 					</span>
 				{% endif %}
 			</div>
 			<div style="position:absolute;left:115.15px; " class="cls_009"><span class="cls_009">
-					{% if doc.containerdetail_set.all|length > 0 %}
+					{% if data.doc.containerdetail.all|length > 0 %}
 					<span id="total_packages" class="cls_009" style="white-space: pre-line">
-						{{ doc.total_packages }}
+						{{ data.doc.total_packages }}
 					</span>
 					{% endif %}
 
@@ -828,7 +825,7 @@
 	
 		<div style="position:absolute;left:120.15px;top:516.54px;">
 			<span id="total_type" class="cls_009" style="white-space: pre-line">
-				{{doc.total_type}}
+				{{data.doc.total_type}}
 			</span>
 		</div>
 
@@ -934,7 +931,7 @@
 					AS
 					CARRIER</span></div> -->
 	</div>
-	<div id="doc_id" hidden>{{ doc.id }}</div>
+	<div id="doc_id" hidden>{{ data.doc.id }}</div>
 	<!-- Dong Phan -->
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -943,7 +940,7 @@
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 
 	<!-- x-editable (bootstrap version) -->
-	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js">
 	</script>
 
 	<!-- toastr notification -->
@@ -953,8 +950,8 @@
 	<script>
 
 	</script>
-	<script src="{% static 'js/doc_template.js' %}"></script>
-	<script src="{% static 'js/ajax_csrf.js' %}"></script>
+	<script src="{{ url_for('static', filename='js/doc_template.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/ajax_csrf.js') }}"></script>
 	<script type="text/javascript">
 		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
 	</script>

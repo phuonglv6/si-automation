@@ -1,5 +1,5 @@
 var doc_path = $("#doc_path").text()
-renderPDF('/media/' + doc_path + '/', document.getElementById('holder'));
+renderPDF('/static/media/' + doc_path + '/', document.getElementById('holder'));
 function renderPDF(url, canvasContainer, options) {
 var options = options || { scale: 1.5 };
 function renderPage(page) {

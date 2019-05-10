@@ -122,7 +122,7 @@ function detailExtract(data) {
 				window.location.href = "/annotation/process/" + data.temp_num;
 			} else if (data.hasOwnProperty('doc')) {
 				// SUCCESS
-				window.location.href = "/drafting/index/";
+				window.location.href = "/extractor/main_panel/";
 			}
 		},
 

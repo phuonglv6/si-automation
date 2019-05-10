@@ -3,6 +3,7 @@ from ..util.model_to_dict import Model
 from ..import db
 
 class Doc(Model):
+    __tablename__ = 'doc'
     id= db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     dated = db.Column(db.DateTime(), default=datetime.datetime.now)
@@ -31,11 +32,13 @@ class Doc(Model):
     aci_code = db.Column(db.String(255), nullable=True)
     bl_type = db.Column(db.String(255), nullable=True)
     payment = db.Column(db.String(255), nullable=True)
+    containerdetail = db.relationship('ContainerDetail', backref="doc",uselist=False)
     def __repr__(self):
         return self.bkg_no if self.bkg_no is not None else 'Empty'
 
 
 class ContainerDetail(Model):
+    __tablename__ = 'containerdetail'
     id = db.Column(db.Integer(), primary_key=True)
     container_no = db.Column(db.String(255))
     seal_no = db.Column(db.String(255), nullable=True)
@@ -44,8 +47,8 @@ class ContainerDetail(Model):
     container_mark = db.Column(db.String(255), nullable=True)
     container_weight = db.Column(db.String(255), nullable=True)
     container_cbm = db.Column(db.String(255), nullable=True)
-    doc_id = db.Column(db.Integer, db.ForeignKey('doc.id'))
-    doc = db.relationship('Doc', uselist=False, backref=db.backref('doc'))
+    doc_id = db.Column(db.Integer(), db.ForeignKey('doc.id'))
+    
     def __repr__(self):
         return "<ContainerNo '{}'>".format(self.container_no)
 

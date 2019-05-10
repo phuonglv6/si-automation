@@ -233,7 +233,6 @@ def totalize_measurement(conts_dict, si_model):
         If total is empty, extract from description & inserting
     """
     print('######## BEGIN CHECKING TOTAL ########')
-    print("totalize_measurement: totalize_measurement: ",si_model)
     for cont_measure, doc_measure in [
             ['packages', 'total_packages'],
             ['container_weight', 'total_weight'],

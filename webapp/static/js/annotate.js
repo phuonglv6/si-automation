@@ -526,7 +526,7 @@ function ajax_submiting(f_data) {
         "SI Annotation has been successfully submitted",
         "SUCCESS"
       );
-      window.location.href = "/drafting/index/";
+      window.location.href = "/extractor/main_panel/";
     },
 
     error: function(data) {

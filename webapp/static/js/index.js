@@ -65,7 +65,7 @@ $(document).ready(function (table) {
 	function get_list() {
 		console.log('** Getting Docs List through drafting/list **');
 		$.ajax({
-			url: '../list/',
+			url: '/extractor/list/',
 			type: 'get',
 			dataType: 'json',
 			success: function (data) {
@@ -73,8 +73,8 @@ $(document).ready(function (table) {
 				console.log(data.docs);
 				if (data.docs.length > 0){
 					var doc = data.docs[0]
-					$('#left_frame').attr('src', '/drafting/pdf/'+ doc.id)
-					$('#right_frame').attr('src', '/drafting/preview/'+ doc.id)
+					$('#left_frame').attr('src', '/extractor/pdf/'+ doc.id)
+					$('#right_frame').attr('src', '/extractor/preview/'+ doc.id)
 				}
 				// let rows = '';
 				// data.docs.forEach(doc => {
