@@ -17,7 +17,7 @@ extractor_blueprint = Blueprint(
 def process():
     if request.method == 'POST':
         # from ...core.pdf_matching import classes
-        filename=request.form['filename']
+        filename = request.form['filename']
         # filename = request.POST['filename']
         status, data, num_pages = extract_file(filename)
 
@@ -39,7 +39,7 @@ def main_panel():
 def list():
     # doc = model_to_dict(Doc.objects.all().latest('id'))
     doc= Doc.query.order_by(Doc.id.desc()).first()
-    data = {'docs': doc.to_dict(show_all=True)}
+    data = {'doc': doc.to_dict(show_all=True)}
     print("Data:",data)
     resp = jsonify(data)
     return resp
@@ -78,3 +78,24 @@ def preview(pk):
                 'total_weight': total_weight,
                 'total_measurement': total_measurement
             })
+
+@extractor_blueprint.route('/detail/<int:pk>/',methods=('GET', 'POST'))
+def detail(pk):
+    if request.method == 'GET':
+        doc = Doc.query.get(pk).to_dict(show_all=True)
+        data = {'doc': doc}
+        resp = jsonify(data)
+        return resp
+
+    if request.method == 'POST':
+        data = dict()
+        name  = request.form['name']
+        value = request.form['value']
+        doc = Doc.query.filter_by(id=pk).first()
+        doc.name =value
+        db.session.commit()
+        
+        data['doc'] = Doc.query.get(pk).to_dict(show_all=True)
+        data['POST'] = request.form
+        resp = jsonify(data)
+        return resp

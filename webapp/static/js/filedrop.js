@@ -74,7 +74,7 @@ function processUploading() {
 function uploadData(formdata) {
 	console.log('$ File UPLOADING $');
 	$.ajax({
-		url: 'upload/',
+		url: '/upload/',
 		type: 'POST',
 		data: formdata,
 		contentType: false,

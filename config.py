@@ -38,7 +38,12 @@ class ProdConfig(Config):
 
 class DevConfig(Config):
     DEBUG = True
+    POSTGRES_URL="127.0.0.1:5432"
+    POSTGRES_USER="phuonglv"
+    POSTGRES_PW="123789"
+    POSTGRES_DB="si_dounet"
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'database.db')
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'database.db')
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=POSTGRES_USER,pw=POSTGRES_PW,url=POSTGRES_URL,db=POSTGRES_DB)
 

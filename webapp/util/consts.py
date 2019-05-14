@@ -1,9 +1,11 @@
+from os.path import dirname, abspath,join
 WIDTH_FOR_ANNOTATION  = 1600
 HEIGHT_FOR_ANNOTATION = 2200
 
 WIDTH_FOR_EXTRACTION  = 595
 HEIGHT_FOR_EXTRACTION = 842
-MEDIA_DIR = "/Volumes/Data/ML_Projects/si-automation/webapp/static/media"
+
+MEDIA_DIR = join(dirname(dirname(abspath(__file__))),"static","media")
 SIBL_CLASSES = {
     '0': 'bkg_no',
     '1': 'shipper',

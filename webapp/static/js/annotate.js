@@ -1,5 +1,6 @@
+
 var lineOffset = 4;
-var anchrSize = 3;
+var anchrSize = 4;
 var gap = 50;
 
 var mousedown = false;
@@ -11,27 +12,17 @@ var x1 = -1;
 var y1 = -1;
 var x2 = -1;
 var y2 = -1;
-var mouseX, mouseY
-
+var mouseX, mouseY, newX, newY
 var boxes = [];
 var tmpBox = null;
-
-// Highlight Selected
-$('#detailTable').find('tr.field').click(function () {
-  field_name = $(this).children('td:last-child').attr('id');
-  $(this).parent().find('td').removeClass('highlight');
-  $(this).children('td').addClass('highlight');
-});
-
-$('#detailTable').find('tr.field').first().click();
+var fillColor = 'DeepSkyBlue';
+var annotate_mode = false;
 
 var canvas = document.getElementById("imgCanvas");
 var wrapper = document.getElementById('canWrap');
 var imageObj = new Image();
 // imageObj.src = '../../../media/annotate/' + $('#pk').text() + '.png';
 imageObj.src = '../../../static/media/annotate/' + $('#pk').text() + '.png';
-
-
 getExistBoxese();
 
 imageObj.onload = function () {
@@ -46,49 +37,94 @@ imageObj.onload = function () {
   if (canvas.height < wrapper.height) {
     canvas.height = wrapper.height - 10
   };
-  redraw();
+  $('#detailTable').find('tr.field').first().click();
 }
+
+// Select Highlight 
+$('#detailTable').find('tr.field').click(function () {
+  field_name = $(this).children('td:last-child').attr('id');
+  $(this).parent().find('td').removeClass('highlight');
+  $(this).children('td').addClass('highlight');
+  // Scroll List table on right bar
+  $(this).get(0).scrollIntoView({
+    behavior: "smooth", block: "center", inline: "nearest"
+  });
+  // Scrolling Canvas to selected box
+  // $('.canvasWrapper').scrollTo(field_name)
+  if (clickedArea.box == -1) {
+    $('.canvasWrapper').scrollTo(field_name)
+  }
+  redraw();
+});
+
+jQuery.fn.scrollTo = function (field_name) {
+  for (var i = 0; i < boxes.length; i++) {
+    if (boxes[i]['name'] === field_name) {
+      newX = boxes[i].x1 - window.screen.width /3;
+      newY = boxes[i].y1 - window.screen.height / 3;
+      $(this).stop().animate({
+        scrollTop: newY, scrollLeft: newX
+      }, 500, 'swing');
+    };
+  };
+};
 
 function redraw() {
   var context = canvas.getContext('2d');
   // CLEAR
   context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+  // Image
+  context.drawImage(image, gap, gap);
+  
   // Border
   context.lineWidth = 1;
   context.strokeStyle = 'black';
   context.strokeRect(gap - 1, gap - 1, image.width + 1, image.height + 1);
-  // Image
-  context.drawImage(image, gap, gap);
-  // Boxes
-  context.beginPath();
+  
   // Clear Cordinate Table
   $('td.cor').empty();
 
+  // Boxes
   for (var i = 0; i < boxes.length; i++) {
+    // Draw boxes
     drawBoxOn(boxes[i], context);
-    // Update Detail Table fields Status
+    // Update DONE fields status
     $('#' + boxes[i].name + '.cor').text('DONE');
     $('#' + boxes[i].name + '.cor').css({
       'color': 'red',
       'font-weight': 'bold'
     });
-
   }
+
   if (clickedArea.box == -1) {
     tmpBox = newBox(x1, y1, x2, y2);
+    // DRAWING
     if (tmpBox != null && mousedown === true) {
       drawBoxOn(tmpBox, context);
     }
-  }
+  };
+  
+  if (annotate_mode == true || clickedArea.box != -1 && clickedArea.pos != 'i') {
+    // Horizon, Vertical Line
+    context.beginPath();
+    context.strokeStyle = 'red';
+    context.moveTo(mouseX, 0);
+    context.lineTo(mouseX, context.canvas.height);
+    context.moveTo(0, mouseY);
+    context.lineTo(context.canvas.width, mouseY);
+    context.stroke();
+    context.closePath();
+  };
+}
 
-  context.strokeStyle = 'red';
-  // context.beginPath();
-  context.moveTo(mouseX, 0);
-  context.lineTo(mouseX, context.canvas.height);
-  context.moveTo(0, mouseY);
-  context.lineTo(context.canvas.width, mouseY);
-  context.stroke();
-  context.closePath();
+function sos_break() {
+  annotate_mode = false;
+  mousedown = false;
+  clickedArea = {
+    box: -1,
+    pos: 'o'
+  };
+  tmpBox = null;
 }
 
 canvas.onmousedown = function (e) {
@@ -96,7 +132,7 @@ canvas.onmousedown = function (e) {
     mousedown = true;
     clickedArea = findCurrentArea(e.offsetX, e.offsetY);
     mouseTransform(clickedArea);
-    if (clickedArea.box != -1) {
+    if (clickedArea.box != -1 && annotate_mode == false) {
       $('.cor#' + boxes[clickedArea.box].name).parent('tr').click();
     }
     x1 = e.offsetX;
@@ -106,41 +142,37 @@ canvas.onmousedown = function (e) {
   }
 };
 canvas.onmouseup = function (e) {
-  if (clickedArea.box == -1 && tmpBox != null) {
-    boxes.forEach(function (box, i) {
-      if (box.name == tmpBox.name) {
-        boxes.splice(i, 1)
-      }
-    });
-    boxes.push(tmpBox);
+  if (e.button === 0) {
+    if (clickedArea.box == -1 && tmpBox != null && annotate_mode == true) {
+      boxes.forEach(function (box, i) {
+        if (box.name == tmpBox.name) {
+          boxes.splice(i, 1)
+        }
+      });
+      boxes.push(tmpBox);
 
-    // Jump to Next Field when finish Drawing if Next Field is Empty
-    if ($('.cor.highlight').parent('tr').next('tr').children('td:last-child').is(':empty')) {
-      $('.cor.highlight').parent('tr').next('tr').click();
-    }
-  } else if (clickedArea.box != -1) {
-    var selectedBox = boxes[clickedArea.box];
-    mouseTransform(selectedBox, [e.offsetX, e.offsetY]);
-    if (selectedBox.x1 > selectedBox.x2) {
-      var previousX1 = selectedBox.x1;
-      selectedBox.x1 = selectedBox.x2;
-      selectedBox.x2 = previousX1;
-    }
-    if (selectedBox.y1 > selectedBox.y2) {
-      var previousY1 = selectedBox.y1;
-      selectedBox.y1 = selectedBox.y2;
-      selectedBox.y2 = previousY1;
-    }
+      // Jump to Next Field when finish Drawing if Next Field is Empty
+      // if ($('.cor.highlight').parent('tr').next('tr').children('td:last-child').is(':empty')) {
+      //   $('.cor.highlight').parent('tr').next('tr').click();
+      // }
+    } else if (clickedArea.box != -1) {
+      var selectedBox = boxes[clickedArea.box];
+      mouseTransform(selectedBox, [e.offsetX, e.offsetY]);
+      if (selectedBox.x1 > selectedBox.x2) {
+        var previousX1 = selectedBox.x1;
+        selectedBox.x1 = selectedBox.x2;
+        selectedBox.x2 = previousX1;
+      }
+      if (selectedBox.y1 > selectedBox.y2) {
+        var previousY1 = selectedBox.y1;
+        selectedBox.y1 = selectedBox.y2;
+        selectedBox.y2 = previousY1;
+      }
+    };
   };
 
   mouseTransform(clickedArea);
-  clickedArea = {
-    box: -1,
-    pos: 'o'
-  };
-  tmpBox = null;
-  mousedown = false;
-  console.log(boxes);
+  sos_break();
 };
 canvas.onmouseout = function (e) {
   if (clickedArea.box != -1) {
@@ -157,15 +189,11 @@ canvas.onmouseout = function (e) {
     }
   };
   canvas.style.removeProperty('cursor');
-  mousedown = false;
-  clickedArea = {
-    box: -1,
-    pos: 'o'
-  };
-  tmpBox = null;
+  sos_break();
 };
 canvas.onmousemove = function (e) {
-  if (mousedown && clickedArea.box == -1) {
+  // if (mousedown && clickedArea.box == -1) {
+  if (mousedown && annotate_mode == true) {
     x2 = e.offsetX;
     y2 = e.offsetY;
     mouseX = x2
@@ -173,7 +201,17 @@ canvas.onmousemove = function (e) {
     $('#imgCanvas').css({
       'cursor': 'crosshair'
     });
-    redraw();
+  } else if (mousedown && annotate_mode == false && clickedArea.box == -1) {
+    $('#imgCanvas').css({
+      'cursor': 'grabbing'
+    });
+
+    newX = $('.canvasWrapper').get(0).scrollLeft - (e.offsetX - x1);
+    newY = $('.canvasWrapper').get(0).scrollTop - (e.offsetY - y1);
+
+    $('.canvasWrapper').scrollLeft(newX);
+    $('.canvasWrapper').scrollTop(newY);
+
   } else if (mousedown && clickedArea.box != -1) {
     x2 = e.offsetX;
     y2 = e.offsetY;
@@ -256,8 +294,7 @@ canvas.onmousemove = function (e) {
     // Transform Mouse Cursor Style
     if (clickedArea.pos == 'i') {
       $('#imgCanvas').css({
-        'cursor': 'grabbing',
-        '-webkit-cursor': 'grabbing'
+        'cursor': 'move',
       })
     } else if (clickedArea.pos == 't' || clickedArea.pos == 'b') {
       $('#imgCanvas').css({
@@ -273,19 +310,18 @@ canvas.onmousemove = function (e) {
       })
     }
 
-    redraw();
   } else if (mousedown === false) {
     mouseTransform(findCurrentArea(e.offsetX, e.offsetY));
     mouseX = e.offsetX
     mouseY = e.offsetY
-    redraw();
   };
+  redraw();
 };
 
 function mouseTransform(area) {
   if (area.box != -1) {
     if (area.pos == 'i') {
-      canvas.style.cursor = 'grab';
+      canvas.style.cursor = 'move';
       return;
     } else if (area.pos == 't' || area.pos == 'b') {
       canvas.style.cursor = 'ns-resize';
@@ -300,8 +336,11 @@ function mouseTransform(area) {
       canvas.style.cursor = 'nesw-resize';
       return;
     }
-  } else {
+  } else if (annotate_mode == true) {
     canvas.style.cursor = 'crosshair';
+    return;
+  } else {
+    canvas.style.cursor = 'grab';
     return;
   }
 };
@@ -312,63 +351,65 @@ function findCurrentArea(x, y) {
     box = unfixGap(oriBox);
     xCenter = box.x1 + (box.x2 - box.x1) / 2;
     yCenter = box.y1 + (box.y2 - box.y1) / 2;
-    if (box.x1 - lineOffset < x && x < box.x1 + lineOffset) {
-      if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
-        return {
-          box: i,
-          pos: 'tl'
-        };
-      } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
-        return {
-          box: i,
-          pos: 'bl'
-        };
-      } else if (yCenter - lineOffset < y && y < yCenter + lineOffset) {
-        return {
-          box: i,
-          pos: 'l'
-        };
-      }
-    } else if (box.x2 - lineOffset < x && x < box.x2 + lineOffset) {
-      if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
-        return {
-          box: i,
-          pos: 'tr'
-        };
-      } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
-        return {
-          box: i,
-          pos: 'br'
-        };
-      } else if (yCenter - lineOffset < y && y < yCenter + lineOffset) {
-        return {
-          box: i,
-          pos: 'r'
-        };
-      }
-    } else if (xCenter - lineOffset < x && x < xCenter + lineOffset) {
-      if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
-        return {
-          box: i,
-          pos: 't'
-        };
-      } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
-        return {
-          box: i,
-          pos: 'b'
-        };
-      } else if (box.y1 - lineOffset < y && y < box.y2 + lineOffset) {
-        return {
-          box: i,
-          pos: 'i'
-        };
-      }
-    } else if (box.x1 - lineOffset < x && x < box.x2 + lineOffset) {
-      if (box.y1 - lineOffset < y && y < box.y2 + lineOffset) {
-        return {
-          box: i,
-          pos: 'i'
-        };
+    if (annotate_mode == false) {
+      if (box.x1 - lineOffset < x && x < box.x1 + lineOffset) {
+        if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
+          return {
+            box: i,
+            pos: 'tl'
+          };
+        } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
+          return {
+            box: i,
+            pos: 'bl'
+          };
+        } else if (yCenter - lineOffset < y && y < yCenter + lineOffset) {
+          return {
+            box: i,
+            pos: 'l'
+          };
+        }
+      } else if (box.x2 - lineOffset < x && x < box.x2 + lineOffset) {
+        if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
+          return {
+            box: i,
+            pos: 'tr'
+          };
+        } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
+          return {
+            box: i,
+            pos: 'br'
+          };
+        } else if (yCenter - lineOffset < y && y < yCenter + lineOffset) {
+          return {
+            box: i,
+            pos: 'r'
+          };
+        }
+      } else if (xCenter - lineOffset < x && x < xCenter + lineOffset) {
+        if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
+          return {
+            box: i,
+            pos: 't'
+          };
+        } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
+          return {
+            box: i,
+            pos: 'b'
+          };
+        } else if (box.y1 - lineOffset < y && y < box.y2 + lineOffset) {
+          return {
+            box: i,
+            pos: 'i'
+          };
+        }
+      } else if (box.x1 - lineOffset < x && x < box.x2 + lineOffset) {
+        if (box.y1 - lineOffset < y && y < box.y2 + lineOffset) {
+          return {
+            box: i,
+            pos: 'i'
+          };
+        }
       }
     }
   }
@@ -398,19 +439,28 @@ function newBox(x1, y1, x2, y2) {
 };
 
 function drawBoxOn(box, context) {
-  cor = unfixGap(box)
+  cor = unfixGap(box);
+
+  if (box.name === field_name) {
+    fillColor = 'rgba(225,225,0,0.17)';
+    strokeLineColor = 'red';
+    strokeLineWidth = 3;
+  } else {
+    fillColor = 'rgba(0,0,0,0.25)';
+    strokeLineColor = 'DeepSkyBlue';
+    strokeLineWidth = 1;
+  };
 
   xCenter = cor.x1 + (cor.x2 - cor.x1) / 2;
   yCenter = cor.y1 + (cor.y2 - cor.y1) / 2;
 
-  context.strokeStyle = 'DeepSkyBlue';
-  context.lineWidth = 1;
-  context.rect(cor.x1, cor.y1, (cor.x2 - cor.x1), (cor.y2 - cor.y1));
-  context.stroke();
+  context.strokeStyle = strokeLineColor;
+  context.lineWidth = strokeLineWidth;
+  context.strokeRect(cor.x1, cor.y1, (cor.x2 - cor.x1), (cor.y2 - cor.y1));
 
-  context.fillStyle = 'rgba(0,0,0,0.1)';
+  context.fillStyle = fillColor;
   context.fillRect(cor.x1, cor.y1, (cor.x2 - cor.x1), (cor.y2 - cor.y1));
-
+  
   context.fillStyle = 'DeepSkyBlue';
   context.fillRect(cor.x1 - anchrSize, cor.y1 - anchrSize, 2 * anchrSize, 2 * anchrSize);
   context.fillRect(cor.x1 - anchrSize, yCenter - anchrSize, 2 * anchrSize, 2 * anchrSize);
@@ -420,9 +470,10 @@ function drawBoxOn(box, context) {
   context.fillRect(cor.x2 - anchrSize, cor.y1 - anchrSize, 2 * anchrSize, 2 * anchrSize);
   context.fillRect(cor.x2 - anchrSize, yCenter - anchrSize, 2 * anchrSize, 2 * anchrSize);
   context.fillRect(cor.x2 - anchrSize, cor.y2 - anchrSize, 2 * anchrSize, 2 * anchrSize);
+  
   context.fillStyle = "red";
   context.textAlign = "right";
-  context.font = "13px Roboto";
+  context.font = "15px Roboto";
   context.fillText(up_space(box.name), cor.x2 - 4, cor.y2 - 4);
 };
 
@@ -469,13 +520,17 @@ function unfixGap(box) {
   }
 };
 
-// Navigate A - D, Prev - Next
 document.addEventListener("keydown", function (event) {
-  if (event.keyCode == 65) {  // A
+  if (event.keyCode == 87) {  // W
+    sos_break();
     $('.cor.highlight').parent('tr').prev('tr').click();
-  } else if (event.keyCode == 68) {  // D
+  } else if (event.keyCode == 83) {  // S
+    sos_break();
     $('.cor.highlight').parent('tr').next('tr').click();
-  } else if (event.keyCode == 88) {  // X
+  } else if (event.keyCode == 65) {  // A
+    annotate_mode = true;
+  } else if (event.keyCode == 68) {  // D
+    sos_break();
     for (var i = 0; i < boxes.length; i++) {
       if (boxes[i]['name'] === $('.cor.highlight').attr('id')) {
         console.log('Remove field', boxes[i]);
@@ -483,8 +538,9 @@ document.addEventListener("keydown", function (event) {
       };
       redraw();
     };
-    // console.log(boxes);
-  }
+  } else if (event.keyCode == 13) {  // Enter
+  $('#submit-button').click();
+  };
 })
 
 function up_space(str) {
@@ -522,6 +578,7 @@ function ajax_submiting(f_data) {
     dataType: "json",
     success: function(data) {
       console.log("$&$ Submiting SUCCESS $&$");
+      // TODO: @rednam-ntn replace all toastr with jquery confirm
       toastr.success(
         "SI Annotation has been successfully submitted",
         "SUCCESS"
@@ -565,3 +622,40 @@ function getExistBoxese() {
     });
   });
 }
+
+$('#help-button').click(function () {
+  $.alert({
+    title: 'README!',
+    content: 'Press <b>"A"</b> button to Start annotate selected field (Red Crosshair will appear) <br>\
+              Press <b>"D"</b> button to Delete selected field annotatated <br>\
+              Press <b>"W"</b> button to Select upward field <br>\
+              Press <b>"S"</b> button to Select downward field <br>\
+              Press <b>"Enter"</b> button to Submit <br>',
+    boxWidth: '40%',
+    useBootstrap: false,
+  });
+});
+
+
+function sizingWrapper() {	
+	var screen_w = window.innerWidth;
+	console.log(screen_w);
+	$('#canWrap').css('width', screen_w * 0.8);
+	$('#rightBar').css({
+		'width': screen_w * 0.2,
+		'font-size': screen_w * 0.009,
+	});
+	$('tr.field').children().css('padding', screen_w * 0.0055);
+}
+
+
+$(document).ready(function () {
+	$('#main-content').unwrap();
+	sizingWrapper();
+	
+	$(window).resize(function(){
+		sizingWrapper()
+  });
+  
+  $('#help-button').click();
+});

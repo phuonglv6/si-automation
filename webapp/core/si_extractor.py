@@ -15,15 +15,8 @@ from .get_doc_detail import extract_vessel_voyage, extract_bkg_no, \
     recheck_conts_package, clean_unit_slash, totalize_measurement, \
     split_por_del  # clean_content_from
 
-
-# import time
-# import sys
-
-# file_path = sys.argv[1]
-# outPath = sys.argv[2]
 keys = SIBL_CLASSES.values()
 classes = SIBL_CLASSES
-UPLOAD_FOLDER = "/Volumes/Data/ML_Projects/si-automation/webapp/static/media"
 
 def extract_word(file_path):
     data_json = {}
@@ -122,7 +115,7 @@ def extract_text(file_path, outPath):
 def file_type_to_pdf(file_path):
     if file_path.endswith('.docx') or file_path.endswith('.doc') or \
             file_path.endswith('.xls') or file_path.endswith('.xlsx'):
-        pdf_path = convert_to(UPLOAD_FOLDER, file_path)
+        pdf_path = convert_to(current_app.config['UPLOAD_FOLDER'], file_path)
         os.remove(file_path)
         return pdf_path
     else:
@@ -211,13 +204,10 @@ def extract_file(filename):
         # Save Doc
         # doc = Doc.objects.create(**si_model)
         # data['doc'] = model_to_dict(doc)
-        print("::::::::::::::::::::::::::::::::::::::::::::::::::::: ",si_model)
         doc = Doc(**si_model)
         db.session.add(doc)
         db.session.commit()
-        print("::::::::::::::::::::::::::::::::::::::::::::::::::::: ",doc)
         data['doc'] = doc.to_dict(show_all=True)
-        print("data['doc']: ",data['doc'])
         # TODO: How about Cont. Number, Cont. Seal Annotation for VN102347
         # Continue with Doc's Container
         if 'containers_detail' in si_result:
@@ -227,7 +217,6 @@ def extract_file(filename):
             if checked:
                 doc_temp = Doc.query.filter_by(id=doc.id).first()
                 doc_temp.total_packages = pkgs_sum
-                print("doc_temp: ",doc_temp.to_dict(show_all=True))
             db.session.commit()
             si_model = totalize_measurement(cont_dicts, doc_temp.to_dict(show_all=True))
 

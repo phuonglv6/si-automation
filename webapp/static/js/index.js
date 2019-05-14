@@ -1,5 +1,5 @@
 $(document).ready(function (table) {
-	get_list();
+	get_last_doc();
 	document.getElementById("bl_submit").onclick = function () {
 		// var cur_ID = get_current_ID().split(' ').join('');
 		// console.log('preview doc ID: ' + cur_ID);
@@ -32,172 +32,39 @@ $(document).ready(function (table) {
 		$('.lds-spinner').css('left', ($(window).width() - $(".lds-spinner").width()) /2);
 	};
 
-	function up_space(str) {
-		return replaceAll(str.toUpperCase(), "_", " ")
-	};
-
-	function replaceAll(str, find, replace) {
-		return str.replace(new RegExp(find, 'g'), replace);
-	};
-
-	function get_current_ID() {
-		var cur_ID = $('#detailTable > tbody > tr:first-child > td:last-child').text();
-		console.log('** Get current ID **: ' + cur_ID);
-		return cur_ID;
-	};
-
-	function get_last_ID() {
-		var last_ID = $('#listTable > tbody > tr:first-child > td:first-child').text();
-		console.log('** Get lastID ** : ' + last_ID);
-		return last_ID;
-	};
-
-	function clear_detailTable() {
-		console.log('** Clearing detailTable **');
-		$('#detailTable > tbody').children().remove();
-	};
-
-	function clear_listTable() {
-		console.log('** Clearing listTable **');
-		$('#listTable > tbody').children().remove();
-	};
-
-	function get_list() {
+	function get_last_doc() {
 		console.log('** Getting Docs List through drafting/list **');
 		$.ajax({
 			url: '/extractor/list/',
 			type: 'get',
 			dataType: 'json',
 			success: function (data) {
-				console.log('## get list SUCCESSED ##');
-				console.log(data.docs);
-				if (data.docs.length > 0){
-					var doc = data.docs[0]
-					$('#left_frame').attr('src', '/extractor/pdf/'+ doc.id)
-					$('#right_frame').attr('src', '/extractor/preview/'+ doc.id)
-				}
-				// let rows = '';
-				// data.docs.forEach(doc => {
-				// 	rows += '\
-				//         <tr>\
-				//             <td>' + doc.id + '</td>\
-				//             <td><a data-type="textarea" class="detail-link"\
-				//             id="' + doc.id + '" \
-				//             href="#">' + doc.name + '</a></td>\
-				//         </tr>';
-				// });
-
-				// console.log('## Add to listTable ##');
-				// $('#listTable > tbody').append(rows);
-				
-				// var last_ID = get_last_ID();
-				// clear_detailTable();
-				// get_detail(last_ID);
-
-				// console.log('## Add hyper-link for listTable items ##');
-				// $('.detail-link').each((i, elm) => {
-				// 	$(elm).on("click", (el) => {
-				// 		console.log('**You\'ve clicked on Doc Name** with ID: ' + elm.id);
-				// 		clear_detailTable();
-				// 		get_detail(elm.id);
-				// 	})
-				// });
-			},
-
-			error: function (data) {
-				console.log('## get list ERROR ##');
-				console.log(data);
-			},
-			complete: function () {
-				console.log('## get list call DONE ##');
-			},
-		});
-	};
-
-	function get_detail(DocId) {
-		console.log('** List giving ID:' + DocId + ' **');
-		$.ajax({
-			url: '../detail/' + DocId + '/',
-			type: 'get',
-			dataType: 'json',
-			success: function (data) {
-				console.log('** get detail SUCCESSED **');
-				let rows = '';
-				for (var key in data.doc) {
-					let doc = data.doc;
-					if (key === 'id') {
-						rows += '\
-						<tr>\
-							<td width="20%"><b>' + up_space(key) + '</b></td>\
-							<td id="' + key + '">\
-							' + doc[key] + '</td>\
-						</tr>';
-					} else if (key === 'name') {
-						rows += '\
-						<tr>\
-							<td width="20%"><b> FILE ' + up_space(key) + '</b></td>\
-							<td><a id="' + key + '"\
-							style="cursor: pointer;"\
-							>' + doc[key] + '</a></td>\
-						</tr>';
-					} else if (doc.hasOwnProperty(key)) {
-						rows += '\
-						<tr>\
-							<td width="20%"><b>' + up_space(key) + '</b></td>\
-							<td><a id="' + key + '" data-type="textarea" \
-							>' + doc[key] + '</a>\
-						</td></tr>';
-					};
-				};
-
-				console.log('** Add to detailTable **');
-				$('#detailTable > tbody').append(rows);
-
-				console.log('** Set to EditAble **');
-				// toggle `popup` / `inline` mode
-				$.fn.editable.defaults.mode = 'inline';
-				for (var key in data.doc) {
-					let doc = data.doc;
-					if (key === 'id') { // Pass
-					} else if (key === 'name') {
-						document.getElementById("name").onclick = function () {
-							var strWindowFeatures = "location=yes,height=800,width=900,scrollbars=yes,status=yes";
-							window.open("/media/" + $("#name").text() + "/", "_blank", strWindowFeatures);
-						};
-					} else if (doc.hasOwnProperty(key)) {
-						$("#" + key).editable({
-							type: 'textarea',
-							url: '../detail/' + doc.id + '/',
-							pk: doc.id,
-							name: key,
-							success: function (data) {
-								console.log(data);
-								if (data.status == true) {
-									return data
-								} else {
-									return data.msg
-								};
-								// msg will be shown in editable form
-							},
-						});
-					};
+				console.log('## get Doc SUCCESSED ##');
+				console.log(data.doc);
+				var doc = data.doc;
+				$('#left_frame').attr('src', '/extractor/pdf/'+ doc.id);
+				$('#right_frame').attr('src', '/extractor/preview/'+ doc.id);				
+				document.getElementById("annotate").onclick = function () {
+					console.log('TEMPLATE:' + doc.template);
+					window.location.href = "/annotation/process/" + doc.template;
 				};
 			},
 
 			error: function (data) {
-				console.log('** get detail ERROR **');
+				console.log('## get Doc ERROR ##');
 				console.log(data);
 			},
 			complete: function () {
-				console.log('** get detail DONE **');
+				console.log('## get Doc call DONE ##');
 			},
 		});
 	};
+
 
 	function uploadData(formdata) {
 		console.log("$ File UPLOADING $");
 		$.ajax({
-			url: '../upload/',
+			url: '/upload/',
 			type: 'POST',
 			data: formdata,
 			contentType: false,
@@ -207,7 +74,6 @@ $(document).ready(function (table) {
 				console.log(data);
 				// forward uploaded filename to Extracting
 				detailExtract(data);
-				
 			},
 			error: function (data) {
 				console.log('## UPLOAD FALSE ##');
@@ -225,23 +91,51 @@ $(document).ready(function (table) {
 	function detailExtract(data) {
 		console.log('$ forwarding to Extracting $');
 		$.ajax({
-			url: '../process/',
+			url: '/extractor/process/',
 			type: 'POST',
 			data: {'filename': data.filename},
 			dataType: 'json',
 			success: function (data) {
 				console.log('$ Extracting SUCCESS $');
 				console.log(data);
-				if (data.hasOwnProperty('temp_num')) {
+				if (data['is_verified'] == false){
+					toastr.error('We could not extract the containers detail in this SI correctly, please send to manual checking');
+					$('#left_frame').attr('src', '/extractor/pdf/'+ data.doc.id);
+					$('#right_frame').attr('src', '/extractor/preview/'+ data.doc.id);
+					get_last_doc();
+				} else if (data.hasOwnProperty('temp_num')) {
 					// NEED to ANNOTATE
-					window.location.href = "/drafting/annotation/" + data.temp_num;
+
+					toastr.options = {  
+						"newestOnTop": true,
+						"progressBar": true,
+						"positionClass": "toast-top-center",
+						"preventDuplicates": false,
+						"onclick": null,
+						"showDuration": "10000",
+						"hideDuration": "10000",
+						"timeOut": "10000",
+						"extendedTimeOut": "10000",
+						"showEasing": "swing",
+						"hideEasing": "linear",
+						"showMethod": "fadeIn",
+						"hideMethod": "fadeOut",
+					};
+
+					toastr.warning(
+						'This SI template is a new type. Please click the button to annotate  or just ignore and upload another SI. \
+						<button id="toAnnotate" class="btn-info";> ANNOTATE </button>'
+					);
+					$('button#toAnnotate').click(function(){
+						window.location.href = "/annotation/process/" + data.temp_num;
+					})
 				} else if (data.hasOwnProperty('doc')) {
 					// SUCCESS
-					$('#left_frame').attr('src', '/drafting/pdf/'+ data.doc.id)
-					$('#right_frame').attr('src', '/drafting/preview/'+ data.doc.id)
+					$('#left_frame').attr('src', '/extractor/pdf/'+ data.doc.id);
+					$('#right_frame').attr('src', '/extractor/preview/'+ data.doc.id);
+					get_last_doc();
 					toastr.success('SI has been successfully processed', 'SUCCESS');
-					clear_listTable();
-					get_list();
+					get_last_doc();
 				}
 			},
 
